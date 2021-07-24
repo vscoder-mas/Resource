@@ -1,0 +1,23 @@
+cmake_minimum_required(VERSION 2.8)
+
+PROJECT(httpclient)
+add_definitions("-std=c++11 -lpthread")
+
+INCLUDE_DIRECTORIES(
+include
+http
+)
+
+#AUX_SOURCE_DIRECTORY(./ _DIR)
+AUX_SOURCE_DIRECTORY(./http _DIR_MAIN)
+LIST(APPEND _DIR_MAIN)
+
+LINK_DIRECTORIES(${PROJECT_SOURCE_DIR}/lib/)
+ADD_EXECUTABLE(${PROJECT_NAME} ${_DIR_MAIN})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} libcrypto-host.so)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} libcurl-host.so)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} libssl-host.so)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} libz-host.so)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} libc++.so)
+#TARGET_LINK_LIBRARIES(${PROJECT_NAME} jsoncpp utils z -lrt -lz -lm -ldl -lpthread)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} jsoncpp utils)

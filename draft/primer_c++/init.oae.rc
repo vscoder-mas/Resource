@@ -1,0 +1,17 @@
+on post-fs-data
+    mkdir /data/oae 0711  root root
+    mkdir /data/oae/k 0701  root root
+    mkdir /data/oae/k/s 0700  root root
+    mkdir /data/oae/k/c 0707  root root
+    mkdir /data/oae/k/d 0707  root root
+    mkdir /data/oae/n 0711  root root
+    mkdir /data/oae/n/s 0711  root root
+    mkdir /data/oae/n/c 0711  root root
+    mkdir /data/oae/n/l 0711  root root
+    restorecon_recursive /data/oae
+
+service oae /system/bin/oae_server -l
+    seclabel u:r:oae_server:s0
+    class late_start
+	user root
+    group root log

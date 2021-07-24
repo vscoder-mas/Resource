@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="calltag_pop_green_text_color">#0DBF79</color>
+    <color name="calltag_pop_yellow_text_color">#FF8F0D</color>
+    <color name="calltag_pop_red_text_color">#F7312E</color>
+    <color name="my_tag_comment_num_color">#FFBF15</color>
+</resources>

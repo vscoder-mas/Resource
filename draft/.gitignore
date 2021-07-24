@@ -1,0 +1,8 @@
+123
+*.o
+*.out
+.vscode
+convert_test.result
+bbb.txt
+
+
