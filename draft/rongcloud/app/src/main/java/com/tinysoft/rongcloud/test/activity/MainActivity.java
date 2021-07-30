@@ -2,7 +2,10 @@ package com.tinysoft.rongcloud.test.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -45,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btnMaster;
     private Button btnSlave;
     private TextView tvRole;
+    private PowerManager.WakeLock wakeLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +65,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvRole = (TextView) findViewById(R.id.textview_role_id);
     }
 
+    @SuppressLint("InvalidWakeLockTag")
     @Override
     protected void onResume() {
         super.onResume();
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "liveTAG");
+        wakeLock.acquire();
     }
 
     private String genRoomId() {
@@ -325,9 +333,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
         } else if (viewId == R.id.button_master_id) {
+            //master: userId:mas
             mToken = "Mv1XFZDLe6YJWyih+tpsnr7m8k7VOYicft9MoV63wY0=@27wv.cn.rongnav.com;27wv.cn.rongcfg.com";
             tvRole.setText("master");
         } else if (viewId == R.id.button_slave_id) {
+            //slave: userId:shuai
             mToken = "W5cY7PHJkPTzpK7RLFSXVtTOVQD1DHxCRV4SGtT5ORQ=@27wv.cn.rongnav.com;27wv.cn.rongcfg.com";
             tvRole.setText("slave");
         }
