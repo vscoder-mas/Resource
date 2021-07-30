@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tinysoft.rongcloud.test.R;
@@ -35,10 +36,15 @@ import io.rong.imlib.RongIMClient;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private String TAG = MainActivity.class.getSimpleName();
     private String mToken = "Mv1XFZDLe6YJWyih+tpsnr7m8k7VOYicft9MoV63wY0=@27wv.cn.rongnav.com;27wv.cn.rongcfg.com";
+    //    private String mToken = "W5cY7PHJkPTzpK7RLFSXVtTOVQD1DHxCRV4SGtT5ORQ=@27wv.cn.rongnav.com;27wv.cn.rongcfg.com";
+    private String mRoomId = "6104708055591928163403682037563228668304497123698583708082708364";
     private Button btnConn;
     private FrameLayout layoutMaster;
     private FrameLayout layoutRemote;
     private RCRTCRoom rcrtcRoom = null;
+    private Button btnMaster;
+    private Button btnSlave;
+    private TextView tvRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +54,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnConn.setOnClickListener(this);
         layoutMaster = (FrameLayout) findViewById(R.id.layout_master_id);
         layoutRemote = (FrameLayout) findViewById(R.id.layout_remote_id);
+        btnMaster = (Button) findViewById(R.id.button_master_id);
+        btnMaster.setOnClickListener(this);
+        btnSlave = (Button) findViewById(R.id.button_slave_id);
+        btnSlave.setOnClickListener(this);
+        tvRole = (TextView) findViewById(R.id.textview_role_id);
     }
 
     @Override
@@ -134,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void run() {
                     Toast.makeText(MainActivity.this, "用户：" + rcrtcRemoteUser.getUserId() + " 加入房间", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "- IRCRTCRoomEventsListener onUserJoined: " + "用户：" + rcrtcRemoteUser.getUserId() + " 加入房间");
                 }
             });
         }
@@ -149,13 +161,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void run() {
                     layoutRemote.removeAllViews();
+                    Log.d(TAG, "- IRCRTCRoomEventsListener onUserLeft: " + "用户：" + rcrtcRemoteUser.getUserId() + " left room !");
                 }
             });
         }
 
         @Override
         public void onUserOffline(RCRTCRemoteUser rcrtcRemoteUser) {
-
+            Log.d(TAG, "- IRCRTCRoomEventsListener onUserOffline: " + "用户：" + rcrtcRemoteUser.getUserId() + " offline !");
         }
 
         /**
@@ -198,7 +211,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         RCRTCEngine.getInstance().getDefaultVideoStream().startCamera(null);
 
         //mRoomId：长度 64 个字符，可包含：`A-Z`、`a-z`、`0-9`、`+`、`=`、`-`、`_`
-        String mRoomId = genRoomId();
         RCRTCEngine.getInstance().joinRoom(mRoomId, new IRCRTCResultDataCallback<RCRTCRoom>() {
             @Override
             public void onSuccess(RCRTCRoom rcrtcRoom) {
@@ -224,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onFailed(RTCErrorCode rtcErrorCode) {
                 Toast.makeText(MainActivity.this, "加入房间失败：" + rtcErrorCode.getReason(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "- onFailed: joinRoom errCode:" + rtcErrorCode.getReason());
             }
         });
     }
@@ -238,6 +251,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (remoteUser.getStreams().size() == 0) {
                 continue;
             }
+
             List<RCRTCInputStream> userStreams = remoteUser.getStreams();
             for (RCRTCInputStream inputStream : userStreams) {
                 if (inputStream.getMediaType() == RCRTCMediaType.VIDEO) {
@@ -261,11 +275,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onSuccess() {
                 Toast.makeText(MainActivity.this, "订阅成功", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "- onSuccess: subscribeStreams .");
             }
 
             @Override
             public void onFailed(RTCErrorCode errorCode) {
                 Toast.makeText(MainActivity.this, "订阅失败：" + errorCode.getReason(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "- onFailed: subscribeStreams .");
             }
         });
     }
@@ -275,11 +291,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onSuccess() {
                 Toast.makeText(MainActivity.this, "发布资源成功", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "- onSuccess: publishDefaultStreams ");
             }
 
             @Override
             public void onFailed(RTCErrorCode rtcErrorCode) {
                 Toast.makeText(MainActivity.this, "发布失败：" + rtcErrorCode.getReason(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "- onFailed: publishDefaultStreams errCode:" + rtcErrorCode.getReason());
             }
         });
     }
@@ -306,6 +324,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 }
             });
+        } else if (viewId == R.id.button_master_id) {
+            mToken = "Mv1XFZDLe6YJWyih+tpsnr7m8k7VOYicft9MoV63wY0=@27wv.cn.rongnav.com;27wv.cn.rongcfg.com";
+            tvRole.setText("master");
+        } else if (viewId == R.id.button_slave_id) {
+            mToken = "W5cY7PHJkPTzpK7RLFSXVtTOVQD1DHxCRV4SGtT5ORQ=@27wv.cn.rongnav.com;27wv.cn.rongcfg.com";
+            tvRole.setText("slave");
         }
     }
 }
