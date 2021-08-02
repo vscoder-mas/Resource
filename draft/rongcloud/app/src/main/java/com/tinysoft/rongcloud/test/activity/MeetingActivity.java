@@ -62,7 +62,6 @@ public class MeetingActivity extends AppCompatActivity implements View.OnClickLi
         tvRole = (TextView) findViewById(R.id.textview_role_id);
     }
 
-    @SuppressLint("InvalidWakeLockTag")
     @Override
     protected void onResume() {
         super.onResume();

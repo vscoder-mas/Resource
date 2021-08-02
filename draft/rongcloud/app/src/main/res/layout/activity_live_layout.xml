@@ -11,11 +11,25 @@
         android:padding="10dp"
         android:text="hello world !" />
 
-    <Button
-        android:id="@+id/button_conn_id"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="connect" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_conn_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="connect" />
+
+        <Button
+            android:id="@+id/button_leave_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="leave" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
