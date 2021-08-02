@@ -5,42 +5,21 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textview_role_id"
+        android:id="@+id/textview_title_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:text="hello world !" />
+
     <Button
-        android:id="@+id/button_conn_id"
+        android:id="@+id/button_meeting_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="connect" />
+        android:text="Video Meeting" />
 
-    <LinearLayout
+    <Button
+        android:id="@+id/button_live_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/button_master_id"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="master" />
-        <Button
-            android:id="@+id/button_slave_id"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="slave" />
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/layout_master_id"
-        android:layout_width="match_parent"
-        android:layout_height="640px" />
-
-    <FrameLayout
-        android:id="@+id/layout_remote_id"
-        android:layout_width="match_parent"
-        android:layout_height="640px" />
+        android:text="live broadcast" />
 </LinearLayout>
