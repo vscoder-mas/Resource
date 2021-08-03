@@ -1,0 +1,4 @@
+rootProject.name = "RongRTCV5"
+include ':app'
+
+

@@ -1,4 +1,4 @@
-package com.tinysoft.rongcloud.test.activity;
+package com.tiysoft.rongrtc.v5.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -13,27 +13,24 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.tinysoft.rongcloud.test.R;
-import com.tinysoft.rongcloud.test.util.PermissionsUtils;
+import com.tinysoft.rongrtc.v5.R;
+import com.tinysoft.rongrtc.v5.util.PermissionsUtils;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private final int REQUEST_CODE_PERMISSIONS = 10;
-    private Button btnMeeting;
-    private Button btnLive;
-    private Button btnViewer;
     private PowerManager.WakeLock wakeLock;
     private String[] PERMISSIONS = new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA,
             Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private Button btnMaster;
+    private Button btnViewer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        btnMeeting = (Button) findViewById(R.id.button_meeting_id);
-        btnMeeting.setOnClickListener(this);
-        btnLive = (Button) findViewById(R.id.button_live_id);
-        btnLive.setOnClickListener(this);
-        btnViewer = (Button) findViewById(R.id.button_viewer_id);
+        btnMaster = (Button) findViewById(R.id.button_master_id);
+        btnMaster.setOnClickListener(this);
+        btnViewer = (Button) findViewById(R.id.button_view_id);
         btnViewer.setOnClickListener(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -61,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         wakeLock.acquire();
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
@@ -79,16 +75,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
-        if (viewId == R.id.button_meeting_id) {
-            Intent intent = new Intent(this, MeetingActivity.class);
+        if (viewId == R.id.button_master_id) {
+            Intent intent = new Intent(MainActivity.this, MasterActivity.class);
             startActivity(intent);
-        } else if (viewId == R.id.button_live_id) {
-            Intent intent = new Intent(this, LiveActivity.class);
-            startActivity(intent);
-        } else if (viewId == R.id.button_viewer_id) {
-            Intent intent = new Intent(this, ViewerActivity.class);
-            startActivity(intent);
+        } else if (viewId == R.id.button_view_id) {
+
         }
     }
 }
+
 
