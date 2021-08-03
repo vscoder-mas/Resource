@@ -19,6 +19,7 @@ import cn.rongcloud.rtc.api.stream.RCRTCVideoInputStream;
 import cn.rongcloud.rtc.api.stream.RCRTCVideoView;
 import cn.rongcloud.rtc.base.RCRTCAVStreamType;
 import cn.rongcloud.rtc.base.RTCErrorCode;
+import io.rong.imlib.RongIMClient;
 
 public class ViewerActivity extends AppCompatActivity implements View.OnClickListener {
     private String TAG = ViewerActivity.class.getSimpleName();
@@ -26,6 +27,7 @@ public class ViewerActivity extends AppCompatActivity implements View.OnClickLis
     private Button btnUnsubscribe;
     private FrameLayout layoutViewer;
     private String mLiveUrl = "fcONuH3d/8we7uDdGarslQig79JP7f/XE6TlzR/t7tcQ+bWIfdi8iFPyvYhT8r2IU/G5ikf3vYhF883NHq/izRnCjSQ8gu7AMJfIizCX6sA8gNfBJPK0zCTytNUz8d/UJ5fMizCH29Uyh9/VMofAiTC5y9Aw8dyNM6nL0jOUxIwnhMPVM4LP+TOpyM8zh+7PMofMiTOX2I0wl+bBMofIijC53M8wudSMMKnMwjO52IowucTBMofUijKHwM8zh9yNM7nIwTC51I0yh9iMMLnuzzKHzIwwqeqMMofqjDKCzIV9w4zDduBFiX32/9siru7nG/Tp3RjzuohIpbWMG/u+jU7y7IsZ+ruJHvbvgBmg64wikeLWGoDh1win3+w+nLy4fcONjzGhsrhIse7nEKDS3kqn6N1N9L2NG/u53kXwuItMor7cRPW820ihtdwepbnnL6zj3z6v4s0Zkdn7IvONuH3D3k7zRQ==";
+    private String mToken = "W5cY7PHJkPTzpK7RLFSXVtTOVQD1DHxCRV4SGtT5ORQ=@27wv.cn.rongnav.com;27wv.cn.rongcfg.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +91,23 @@ public class ViewerActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         int viewId = v.getId();
         if (viewId == R.id.button_subscribe_id) {
-            subscribe();
+            RongIMClient.connect(mToken, new RongIMClient.ConnectCallback() {
+                @Override
+                public void onDatabaseOpened(RongIMClient.DatabaseOpenStatus code) {
+                }
+
+                @Override
+                public void onSuccess(String s) {
+                    //TODO 服务连接成功后，可以进行音视频加入房间操作 RCRTCEngine.getInstance().joinRoom(...)
+                    Log.d(TAG, "- onSuccess userId:" + s);
+                    subscribe();
+                }
+
+                @Override
+                public void onError(RongIMClient.ConnectionErrorCode errorCode) {
+
+                }
+            });
         } else if (viewId == R.id.button_unsubscribe_id) {
             RCRTCEngine.getInstance().unsubscribeLiveStream(mLiveUrl, new IRCRTCResultCallback() {
                 @Override
