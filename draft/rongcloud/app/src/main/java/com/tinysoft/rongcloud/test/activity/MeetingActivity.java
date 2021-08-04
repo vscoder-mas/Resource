@@ -245,6 +245,7 @@ public class MeetingActivity extends AppCompatActivity implements View.OnClickLi
 
     private void subscribeAVStream(RCRTCRoom rtcRoom) {
         if (rtcRoom == null || rtcRoom.getRemoteUsers() == null) {
+            Log.d(TAG, "- subscribeAVStream: if (rtcRoom == null || rtcRoom.getRemoteUsers() == null)");
             return;
         }
 
@@ -270,6 +271,7 @@ public class MeetingActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         if (inputStreams.size() == 0) {
+            Log.d(TAG, "- subscribeAVStream: if (inputStreams.size() == 0)");
             return;
         }
 
