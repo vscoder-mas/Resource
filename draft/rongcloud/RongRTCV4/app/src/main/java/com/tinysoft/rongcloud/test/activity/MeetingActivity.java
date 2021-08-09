@@ -22,6 +22,7 @@ import cn.rongcloud.rtc.api.RCRTCRemoteUser;
 import cn.rongcloud.rtc.api.RCRTCRoom;
 import cn.rongcloud.rtc.api.callback.IRCRTCResultCallback;
 import cn.rongcloud.rtc.api.callback.IRCRTCResultDataCallback;
+import cn.rongcloud.rtc.api.callback.IRCRTCRoomEventsListener;
 import cn.rongcloud.rtc.api.stream.RCRTCInputStream;
 import cn.rongcloud.rtc.api.stream.RCRTCLiveInfo;
 import cn.rongcloud.rtc.api.stream.RCRTCVideoInputStream;
@@ -82,108 +83,119 @@ public class MeetingActivity extends AppCompatActivity implements View.OnClickLi
     /**
      * 房间事件监听文档：https://www.rongcloud.cn/docs/api/android/rtclib_v4/cn/rongcloud/rtc/api/callback/IRCRTCRoomEventsListener.html
      */
-//    private IRCRTCRoomEventsListener roomEventsListener = new IRCRTCRoomEventsListener() {
-//        /**
-//         * 房间内用户发布资源
-//         *
-//         * @param rcrtcRemoteUser 远端用户
-//         * @param list            发布的资源
-//         */
-//        @Override
-//        public void onRemoteUserPublishResource(RCRTCRemoteUser rcrtcRemoteUser, final List<RCRTCInputStream> list) {
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    for (RCRTCInputStream inputStream : list) {
-//                        if (inputStream.getMediaType() == RCRTCMediaType.VIDEO) {
-//                            RCRTCVideoView remoteVideoView = new RCRTCVideoView(getApplicationContext());
-//                            layoutRemote.removeAllViews();
-//                            //将远端视图添加至布局
-//                            layoutRemote.addView(remoteVideoView);
-//                            ((RCRTCVideoInputStream) inputStream).setVideoView(remoteVideoView);
-//                            //选择订阅大流或是小流。默认小流
-//                            ((RCRTCVideoInputStream) inputStream).setStreamType(RCRTCStreamType.NORMAL);
-//                        }
-//                    }
-//
-//                    //TODO 按需在此订阅远端用户发布的资源
-//                    rcrtcRoom.getLocalUser().subscribeStreams(list, new IRCRTCResultCallback() {
-//                        @Override
-//                        public void onSuccess() {
-//                            Toast.makeText(MeetingActivity.this, "订阅成功", Toast.LENGTH_SHORT).show();
-//                        }
-//
-//                        @Override
-//                        public void onFailed(RTCErrorCode rtcErrorCode) {
-//                            Toast.makeText(MeetingActivity.this, "订阅失败：" + rtcErrorCode, Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//                }
-//            });
-//        }
-//
-//        @Override
-//        public void onRemoteUserMuteAudio(RCRTCRemoteUser rcrtcRemoteUser, RCRTCInputStream rcrtcInputStream, boolean b) {
-//
-//        }
-//
-//        @Override
-//        public void onRemoteUserMuteVideo(RCRTCRemoteUser rcrtcRemoteUser, RCRTCInputStream rcrtcInputStream, boolean b) {
-//        }
-//
-//
-//        @Override
-//        public void onRemoteUserUnpublishResource(RCRTCRemoteUser rcrtcRemoteUser, List<RCRTCInputStream> list) {
-//            layoutRemote.removeAllViews();
-//        }
-//
-//        /**
-//         * 用户加入房间
-//         *
-//         * @param rcrtcRemoteUser 远端用户
-//         */
-//        @Override
-//        public void onUserJoined(final RCRTCRemoteUser rcrtcRemoteUser) {
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    Toast.makeText(MeetingActivity.this, "用户：" + rcrtcRemoteUser.getUserId() + " 加入房间", Toast.LENGTH_SHORT).show();
-//                    Log.d(TAG, "- IRCRTCRoomEventsListener onUserJoined: " + "用户：" + rcrtcRemoteUser.getUserId() + " 加入房间");
-//                }
-//            });
-//        }
-//
-//        /**
-//         * 用户离开房间
-//         *
-//         * @param rcrtcRemoteUser 远端用户
-//         */
-//        @Override
-//        public void onUserLeft(RCRTCRemoteUser rcrtcRemoteUser) {
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    layoutRemote.removeAllViews();
-//                    Log.d(TAG, "- IRCRTCRoomEventsListener onUserLeft: " + "用户：" + rcrtcRemoteUser.getUserId() + " left room !");
-//                }
-//            });
-//        }
-//
-//        @Override
-//        public void onUserOffline(RCRTCRemoteUser rcrtcRemoteUser) {
-//            Log.d(TAG, "- IRCRTCRoomEventsListener onUserOffline: " + "用户：" + rcrtcRemoteUser.getUserId() + " offline !");
-//        }
-//
-//        /**
-//         * 自己退出房间。 例如断网退出等
-//         *
-//         * @param i 状态码
-//         */
-//        @Override
-//        public void onLeaveRoom(int i) {
-//
-//        }
-//    };
+    private IRCRTCRoomEventsListener roomEventsListener = new IRCRTCRoomEventsListener() {
+        /**
+         * 房间内用户发布资源
+         *
+         * @param rcrtcRemoteUser 远端用户
+         * @param list            发布的资源
+         */
+        @Override
+        public void onRemoteUserPublishResource(RCRTCRemoteUser rcrtcRemoteUser, final List<RCRTCInputStream> list) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    for (RCRTCInputStream inputStream : list) {
+                        if (inputStream.getMediaType() == RCRTCMediaType.VIDEO) {
+                            RCRTCVideoView remoteVideoView = new RCRTCVideoView(getApplicationContext());
+                            layoutRemote.removeAllViews();
+                            //将远端视图添加至布局
+                            layoutRemote.addView(remoteVideoView);
+                            ((RCRTCVideoInputStream) inputStream).setVideoView(remoteVideoView);
+                            //选择订阅大流或是小流。默认小流
+                            ((RCRTCVideoInputStream) inputStream).setStreamType(RCRTCStreamType.NORMAL);
+                        }
+                    }
+
+                    //TODO 按需在此订阅远端用户发布的资源
+                    rcrtcRoom.getLocalUser().subscribeStreams(list, new IRCRTCResultCallback() {
+                        @Override
+                        public void onSuccess() {
+                            Toast.makeText(MeetingActivity.this, "订阅成功", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailed(RTCErrorCode rtcErrorCode) {
+                            Toast.makeText(MeetingActivity.this, "订阅失败：" + rtcErrorCode, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+        }
+
+        @Override
+        public void onRemoteUserMuteAudio(RCRTCRemoteUser rcrtcRemoteUser, RCRTCInputStream rcrtcInputStream, boolean b) {
+
+        }
+
+        @Override
+        public void onRemoteUserMuteVideo(RCRTCRemoteUser rcrtcRemoteUser, RCRTCInputStream rcrtcInputStream, boolean b) {
+        }
+
+
+        @Override
+        public void onRemoteUserUnpublishResource(RCRTCRemoteUser rcrtcRemoteUser, List<RCRTCInputStream> list) {
+            layoutRemote.removeAllViews();
+        }
+
+        /**
+         * 用户加入房间
+         *
+         * @param rcrtcRemoteUser 远端用户
+         */
+        @Override
+        public void onUserJoined(final RCRTCRemoteUser rcrtcRemoteUser) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MeetingActivity.this, "用户：" + rcrtcRemoteUser.getUserId() + " 加入房间", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "- IRCRTCRoomEventsListener onUserJoined: " + "用户：" + rcrtcRemoteUser.getUserId() + " 加入房间");
+                }
+            });
+        }
+
+        /**
+         * 用户离开房间
+         *
+         * @param rcrtcRemoteUser 远端用户
+         */
+        @Override
+        public void onUserLeft(RCRTCRemoteUser rcrtcRemoteUser) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    layoutRemote.removeAllViews();
+                    Log.d(TAG, "- IRCRTCRoomEventsListener onUserLeft: " + "用户：" + rcrtcRemoteUser.getUserId() + " left room !");
+                }
+            });
+        }
+
+        @Override
+        public void onUserOffline(RCRTCRemoteUser rcrtcRemoteUser) {
+            Log.d(TAG, "- IRCRTCRoomEventsListener onUserOffline: " + "用户：" + rcrtcRemoteUser.getUserId() + " offline !");
+        }
+
+        @Override
+        public void onPublishLiveStreams(List<RCRTCInputStream> list) {
+
+        }
+
+        @Override
+        public void onUnpublishLiveStreams(List<RCRTCInputStream> list) {
+
+        }
+
+        /**
+         * 自己退出房间。 例如断网退出等
+         *
+         * @param i 状态码
+         */
+        @Override
+        public void onLeaveRoom(int i) {
+
+        }
+    };
+
     private void joinRoom() {
         RCRTCConfig config = RCRTCConfig.Builder.create()
                 //是否硬解码
@@ -227,7 +239,7 @@ public class MeetingActivity extends AppCompatActivity implements View.OnClickLi
 
                         //注册房间事件回调
                         MeetingActivity.this.rcrtcRoom = rcrtcRoom;
-//                        rcrtcRoom.registerRoomListener(roomEventsListener);
+                        rcrtcRoom.registerRoomListener(roomEventsListener);
                         //加入房间成功后，发布默认音视频流
                         publishDefaultAVStream(rcrtcRoom);
                         //加入房间成功后，如果房间中已存在用户且发布了音、视频流，就订阅远端用户发布的音视频流.
@@ -306,15 +318,27 @@ public class MeetingActivity extends AppCompatActivity implements View.OnClickLi
 //            }
 //        });
 
-        rcrtcRoom.getLocalUser().publishDefaultLiveStreams(new IRCRTCResultDataCallback<RCRTCLiveInfo>() {
+//        rcrtcRoom.getLocalUser().publishDefaultLiveStreams(new IRCRTCResultDataCallback<RCRTCLiveInfo>() {
+//            @Override
+//            public void onSuccess(RCRTCLiveInfo rcrtcLiveInfo) {
+//                Log.d(TAG, "- onSuccess: publishDefaultStreams ");
+//            }
+//
+//            @Override
+//            public void onFailed(RTCErrorCode rtcErrorCode) {
+//                Log.d(TAG, "- onFailed: publishDefaultStreams errCode:" + rtcErrorCode.getReason());
+//            }
+//        });
+
+        rcrtcRoom.getLocalUser().publishLiveStream(rcrtcRoom.getLocalUser().getDefaultVideoStream(), new IRCRTCResultDataCallback<RCRTCLiveInfo>() {
             @Override
             public void onSuccess(RCRTCLiveInfo rcrtcLiveInfo) {
-                Log.d(TAG, "- onSuccess: publishDefaultStreams ");
+                Log.d(TAG, "- onSuccess: publishLiveStream ");
             }
 
             @Override
             public void onFailed(RTCErrorCode rtcErrorCode) {
-                Log.d(TAG, "- onFailed: publishDefaultStreams errCode:" + rtcErrorCode.getReason());
+                Log.d(TAG, "- onFailed: publishLiveStream errCode:" + rtcErrorCode.getReason());
             }
         });
     }
@@ -350,47 +374,47 @@ public class MeetingActivity extends AppCompatActivity implements View.OnClickLi
             mToken = "W5cY7PHJkPTzpK7RLFSXVtTOVQD1DHxCRV4SGtT5ORQ=@27wv.cn.rongnav.com;27wv.cn.rongcfg.com";
             tvRole.setText("slave");
         } else if (viewId == R.id.button_unpublish_id) {
-            rcrtcRoom.getLocalUser().unpublishDefaultLiveStreams(new IRCRTCResultCallback() {
-                @Override
-                public void onSuccess() {
-                    Toast.makeText(MeetingActivity.this, "发布资源成功", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "- onSuccess: unpublishDefaultLiveStreams ");
-                }
-
-                @Override
-                public void onFailed(RTCErrorCode rtcErrorCode) {
-                    Toast.makeText(MeetingActivity.this, "发布失败：" + rtcErrorCode.getReason(), Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "- onFailed: unpublishDefaultLiveStreams errCode:" + rtcErrorCode.getReason());
-                }
-            });
+//            rcrtcRoom.getLocalUser().unpublishDefaultLiveStreams(new IRCRTCResultCallback() {
+//                @Override
+//                public void onSuccess() {
+//                    Toast.makeText(MeetingActivity.this, "取消发布资源成功", Toast.LENGTH_SHORT).show();
+//                    Log.d(TAG, "- onSuccess: unpublishDefaultLiveStreams ");
+//                }
+//
+//                @Override
+//                public void onFailed(RTCErrorCode rtcErrorCode) {
+//                    Toast.makeText(MeetingActivity.this, "取消发布失败：" + rtcErrorCode.getReason(), Toast.LENGTH_SHORT).show();
+//                    Log.d(TAG, "- onFailed: unpublishDefaultLiveStreams errCode:" + rtcErrorCode.getReason());
+//                }
+//            });
 
 //            rcrtcRoom.getLocalUser().unpublishDefaultStreams(new IRCRTCResultCallback() {
 //                @Override
 //                public void onSuccess() {
-//                    Toast.makeText(MeetingActivity.this, "发布资源成功", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MeetingActivity.this, "取消发布资源成功", Toast.LENGTH_SHORT).show();
 //                    Log.d(TAG, "- onSuccess: unpublishDefaultStreams ");
 //                }
 //
 //                @Override
 //                public void onFailed(RTCErrorCode rtcErrorCode) {
-//                    Toast.makeText(MeetingActivity.this, "发布失败：" + rtcErrorCode.getReason(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MeetingActivity.this, "取消发布失败：" + rtcErrorCode.getReason(), Toast.LENGTH_SHORT).show();
 //                    Log.d(TAG, "- onFailed: unpublishDefaultStreams errCode:" + rtcErrorCode.getReason());
 //                }
 //            });
 
-//            rcrtcRoom.getLocalUser().unpublishLiveStream(rcrtcRoom.getLocalUser().getStreams().get(0), new IRCRTCResultCallback() {
-//                @Override
-//                public void onSuccess() {
-//                    Toast.makeText(MeetingActivity.this, "发布资源成功", Toast.LENGTH_SHORT).show();
-//                    Log.d(TAG, "- onSuccess: unpublishDefaultStreams ");
-//                }
-//
-//                @Override
-//                public void onFailed(RTCErrorCode rtcErrorCode) {
-//                    Toast.makeText(MeetingActivity.this, "发布失败：" + rtcErrorCode.getReason(), Toast.LENGTH_SHORT).show();
-//                    Log.d(TAG, "- onFailed: unpublishDefaultStreams errCode:" + rtcErrorCode.getReason());
-//                }
-//            });
+            rcrtcRoom.getLocalUser().unpublishLiveStream(rcrtcRoom.getLocalUser().getDefaultVideoStream(), new IRCRTCResultCallback() {
+                @Override
+                public void onSuccess() {
+                    Toast.makeText(MeetingActivity.this, "取消发布资源成功", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "- onSuccess: unpublishDefaultStreams ");
+                }
+
+                @Override
+                public void onFailed(RTCErrorCode rtcErrorCode) {
+                    Toast.makeText(MeetingActivity.this, "取消发布失败：" + rtcErrorCode.getReason(), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "- onFailed: unpublishDefaultStreams errCode:" + rtcErrorCode.getReason());
+                }
+            });
         }
     }
 }
