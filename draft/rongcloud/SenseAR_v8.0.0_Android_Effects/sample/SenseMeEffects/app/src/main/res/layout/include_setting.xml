@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_setting_options"
+    android:layout_width="match_parent"
+    android:layout_height="160dp"
+    android:layout_above="@+id/ll_select_options"
+    android:background="#80000000"
+    android:orientation="vertical"
+    android:visibility="invisible"
+    tools:ignore="HardcodedText"
+    tools:visibility="visible">
+
+    <TextView
+        android:id="@+id/tv_resolution"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/set_resolution"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_small_size_selected"
+        android:layout_width="60dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/bg_button_corner_unpressed"
+        android:gravity="center"
+        android:text="480P"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/tv_resolution"
+        app:layout_constraintLeft_toRightOf="@id/tv_resolution"
+        app:layout_constraintTop_toTopOf="@id/tv_resolution" />
+
+    <TextView
+        android:id="@+id/tv_small_size_unselected"
+        android:layout_width="60dp"
+        android:layout_height="36dp"
+        android:background="@drawable/bg_preview_size_gap"
+        android:gravity="center"
+        android:text="480P"
+        android:textColor="#999999"
+        android:textSize="16sp"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="@id/tv_small_size_selected"
+        app:layout_constraintRight_toRightOf="@id/tv_small_size_selected"
+        app:layout_constraintTop_toTopOf="@id/tv_small_size_selected" />
+
+    <RelativeLayout
+        android:id="@+id/rl_720"
+        android:layout_width="60dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_small_size_selected"
+        app:layout_constraintLeft_toRightOf="@id/tv_small_size_selected"
+        app:layout_constraintTop_toTopOf="@id/tv_small_size_selected">
+
+        <TextView
+            android:id="@+id/tv_large_size_selected"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/bg_button_corner_unpressed"
+            android:gravity="center"
+            android:text="720P"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tv_large_size_unselected"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/bg_preview_size_gap"
+            android:gravity="center"
+            android:text="720P"
+            android:textColor="#999999"
+            android:textSize="16sp"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="60dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_small_size_selected"
+        app:layout_constraintLeft_toRightOf="@id/rl_720"
+        app:layout_constraintTop_toTopOf="@id/tv_small_size_selected">
+
+        <TextView
+            android:id="@+id/tv_largest_size_selected"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/bg_button_corner_unpressed"
+            android:gravity="center"
+            android:text="1080P"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/tv_largest_size_unselected"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/bg_preview_size_gap"
+            android:gravity="center"
+            android:text="1080P"
+            android:textColor="#999999"
+            android:textSize="16sp"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_performance"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:text="@string/set_performance"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/tv_resolution"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/sw_performance_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="15dp"
+        android:layout_toEndOf="@+id/tv_performance"
+        android:switchMinWidth="56dp"
+        android:textOff=""
+        android:textOn=""
+        android:thumb="@drawable/thumb"
+        android:thumbTextPadding="14dp"
+        android:track="@drawable/track"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/tv_performance"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_language"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:layout_marginStart="15dp"
+        android:text="@string/set_language"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/sw_performance_switch"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/sw_language"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="15dp"
+        android:layout_toEndOf="@+id/tv_performance"
+        android:switchMinWidth="56dp"
+        android:textOff=""
+        android:textOn=""
+        android:thumb="@drawable/thumb"
+        android:thumbTextPadding="14dp"
+        android:track="@drawable/track"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/tv_language"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Group
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:constraint_referenced_ids="tv_language, sw_language"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_provisions_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="5dp"
+        android:autoLink="all"
+        android:gravity="center"
+        android:text="@string/set_terms"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="@id/tv_resolution"
+        app:layout_constraintTop_toBottomOf="@id/tv_performance" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tv_provisions_btn"
+        android:background="@color/white"
+        app:layout_constraintLeft_toLeftOf="@id/tv_provisions_btn"
+        app:layout_constraintRight_toRightOf="@id/tv_provisions_btn"
+        app:layout_constraintTop_toBottomOf="@id/tv_provisions_btn" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

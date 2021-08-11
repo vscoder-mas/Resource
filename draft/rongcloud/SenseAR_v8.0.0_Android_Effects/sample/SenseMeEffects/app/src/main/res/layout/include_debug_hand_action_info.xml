@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_hand_action_info"
+    android:layout_width="match_parent"
+    android:layout_height="42dp"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="75dp"
+    android:background="#e0ffffff"
+    android:orientation="horizontal"
+    android:visibility="invisible"
+    tools:visibility="invisible">
+
+    <ImageView
+        android:id="@+id/iv_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="6dp"
+        android:src="@drawable/ic_trigger_ok" />
+
+    <ImageView
+        android:id="@+id/iv_scissor"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="6dp"
+        android:src="@drawable/ic_trigger_scissor" />
+
+    <ImageView
+        android:id="@+id/iv_thumb"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="6dp"
+        android:src="@drawable/ic_trigger_thumb" />
+
+    <ImageView
+        android:id="@+id/iv_palm"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="6dp"
+        android:src="@drawable/ic_trigger_palm" />
+
+    <ImageView
+        android:id="@+id/iv_pistol"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="6dp"
+        android:src="@drawable/ic_trigger_pistol" />
+
+    <ImageView
+        android:id="@+id/iv_heart_hand"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="6dp"
+        android:src="@drawable/ic_trigger_heart_hand" />
+
+    <ImageView
+        android:id="@+id/iv_palm_up"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="6dp"
+        android:src="@drawable/ic_trigger_palm_up" />
+
+    <ImageView
+        android:id="@+id/iv_congratulate"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="6dp"
+        android:src="@drawable/ic_trigger_congratulate" />
+
+    <ImageView
+        android:id="@+id/iv_finger_heart"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="6dp"
+        android:src="@drawable/ic_trigger_finger_heart" />
+
+    <ImageView
+        android:id="@+id/iv_one_finger"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="6dp"
+        android:src="@drawable/ic_trigger_one_finger" />
+</LinearLayout>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_face_expression"
+    android:layout_width="40dp"
+    android:layout_height="425dp"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="120dp"
+    android:background="#66333333"
+    android:orientation="vertical"
+    android:visibility="invisible"
+    tools:visibility="invisible">
+
+    <ImageView
+        android:id="@+id/iv_face_expression_head_normal"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:src="@drawable/face_expression_head_normal" />
+
+    <ImageView
+        android:id="@+id/iv_face_expression_side_face_left"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:src="@drawable/face_expression_side_face_left" />
+
+    <ImageView
+        android:id="@+id/iv_face_expression_side_face_right"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:src="@drawable/face_expression_side_face_right" />
+
+    <ImageView
+        android:id="@+id/iv_face_expression_tilted_face_left"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:src="@drawable/face_expression_tilted_face_left" />
+
+    <ImageView
+        android:id="@+id/iv_face_expression_tilted_face_right"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:src="@drawable/face_expression_tilted_face_right" />
+
+    <ImageView
+        android:id="@+id/iv_face_expression_head_rise"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:src="@drawable/face_expression_head_rise" />
+
+    <ImageView
+        android:id="@+id/iv_face_expression_head_lower"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:src="@drawable/face_expression_head_lower" />
+
+    <ImageView
+        android:id="@+id/iv_face_expression_two_eye_close"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:src="@drawable/face_expression_two_eye_close" />
+
+    <ImageView
+        android:id="@+id/iv_face_expression_two_eye_open"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:src="@drawable/face_expression_two_eye_open" />
+
+    <ImageView
+        android:id="@+id/iv_face_expression_lefteye_open_righteye_close"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:src="@drawable/face_expression_lefteye_open_righteye_close" />
+
+    <ImageView
+        android:id="@+id/iv_face_expression_lefteye_close_righteye_open"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:src="@drawable/face_expression_lefteye_close_righteye_open" />
+
+    <ImageView
+        android:id="@+id/iv_face_expression_mouth_close"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:src="@drawable/face_expression_mouth_close" />
+
+    <ImageView
+        android:id="@+id/iv_face_expression_mouth_open"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:src="@drawable/face_expression_mouth_open" />
+
+    <ImageView
+        android:id="@+id/iv_face_expression_face_lips_upward"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:src="@drawable/face_expression_face_lips_upward" />
+
+    <ImageView
+        android:id="@+id/iv_face_expression_face_lips_pouted"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:src="@drawable/face_expression_face_lips_pouted" />
+
+    <ImageView
+        android:id="@+id/iv_face_expression_lips_curl_left"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:src="@drawable/face_expression_lips_curl_left" />
+
+    <ImageView
+        android:id="@+id/iv_face_expression_lips_curl_right"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:src="@drawable/face_expression_lips_curl_right" />
+</LinearLayout>

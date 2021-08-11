@@ -1,0 +1,6 @@
+ext {
+    android = [
+            versionCode          : 800,
+            versionName          : "8.0.0",
+    ]
+}
