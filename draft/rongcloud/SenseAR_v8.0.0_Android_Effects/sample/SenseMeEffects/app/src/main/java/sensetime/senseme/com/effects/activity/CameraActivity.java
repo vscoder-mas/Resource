@@ -60,9 +60,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sensetime.sensearsourcemanager.SenseArMaterial;
-import com.sensetime.sensearsourcemanager.SenseArMaterialService;
-import com.sensetime.sensearsourcemanager.SenseArMaterialType;
+//import com.sensetime.sensearsourcemanager.SenseArMaterial;
+//import com.sensetime.sensearsourcemanager.SenseArMaterialService;
+//import com.sensetime.sensearsourcemanager.SenseArMaterialType;
 import com.sensetime.stmobile.STEffectBeautyType;
 import com.sensetime.stmobile.STMobileHumanActionNative;
 import com.sensetime.stmobile.STSoundPlay;
@@ -544,7 +544,7 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
         setContentView(R.layout.activity_main);
         mContext = this;
         initView();
-        initStickerListFromNet();
+//        initStickerListFromNet();
         initEvents();
 
         if (DEBUG) {
@@ -1040,9 +1040,9 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
         mMakeupAdapters.put("makeup_eyeball", new MakeupAdapter(mMakeupLists.get("makeup_eyeball"), this));
         mMakeupAdapters.put("makeup_hairdye", new MakeupAdapter(mMakeupLists.get("makeup_hairdye"), this));
         mMakeupAdapters.put("makeup_all", new MakeupAdapter(mMakeupLists.get("makeup_all"), this));
-        for (MakeUpOptionsItem item : MAKE_UP_OPTIONS_LIST) {
-            initMakeUpListener(item.groupName, null);
-        }
+//        for (MakeUpOptionsItem item : MAKE_UP_OPTIONS_LIST) {
+//            initMakeUpListener(item.groupName, null);
+//        }
         mMakeupOptionIndex.put("makeup_lip", 3);
         mMakeupOptionIndex.put("makeup_highlight", 4);
         mMakeupOptionIndex.put("makeup_blush", 2);
@@ -1366,13 +1366,13 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
         mIsSettingOptionsOpen = false;
 
         mSelectionPicture = (ImageView) findViewById(R.id.iv_mode_picture);
-        mSelectionPicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), LoadImageActivity.class));
-                finish();
-            }
-        });
+//        mSelectionPicture.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(getApplicationContext(), LoadImageActivity.class));
+//                finish();
+//            }
+//        });
 
         findViewById(R.id.tv_cancel).setVisibility(View.INVISIBLE);
         findViewById(R.id.tv_capture).setVisibility(View.INVISIBLE);
@@ -2260,104 +2260,104 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    private void clickMakeUpItem(int position, MakeupItem item, SenseArMaterial material, MakeupAdapter mMakeupAdapter, String groupName) {
+//    private void clickMakeUpItem(int position, MakeupItem item, SenseArMaterial material, MakeupAdapter mMakeupAdapter, String groupName) {
+//
+//        EffectInfoDataHelper.getInstance().filterStrength = mDefaultFilterStrength / 100f;
+//        if (position == 0) {
+//            lastIndex = -1;
+//            EffectInfoDataHelper.getInstance().fullBeautyName = "";
+//            mMakeupAdapter.setSelectedPosition(position);
+//            mMakeupOptionSelectedIndex.put(mMakeupOptionIndex.get(groupName), position);
+//
+//            mFilterStrengthLayout.setVisibility(View.INVISIBLE);
+//            mCameraDisplay.removeMakeupByType(mCurrentMakeupGroupIndex);
+//            updateMakeupOptions(mCurrentMakeupGroupIndex, false);
+//        } else if (position == mMakeupOptionSelectedIndex.get(mMakeupOptionIndex.get(groupName))) {
+//            mMakeupAdapter.setSelectedPosition(0);
+//            mMakeupOptionSelectedIndex.put(mMakeupOptionIndex.get(groupName), 0);
+//
+//            mFilterStrengthLayout.setVisibility(View.INVISIBLE);
+//            mCameraDisplay.removeMakeupByType(mCurrentMakeupGroupIndex);
+//            updateMakeupOptions(mCurrentMakeupGroupIndex, false);
+//        } else {
+//            if (mCurrentMakeupGroupIndex == Constants.ST_MAKEUP_ALL) {
+//                resetMakeup(false, false);
+//            }
+//            mMakeupAdapter.setSelectedPosition(position);
+//            mMakeupOptionSelectedIndex.put(mMakeupOptionIndex.get(groupName), position);
+//
+//            mCameraDisplay.setMakeupForType(mCurrentMakeupGroupIndex, mMakeupLists.get(getMakeupNameOfType(mCurrentMakeupGroupIndex)).get(position).path);
+//            mCameraDisplay.setStrengthForType(mCurrentMakeupGroupIndex, (float) mMakeupStrength.get(mCurrentMakeupGroupIndex) / 100.f);
+//            mFilterStrengthLayout.setVisibility(View.VISIBLE);
+//            mFilterStrengthBar.setProgress(mMakeupStrength.get(mCurrentMakeupGroupIndex));
+//            mFilterStrengthText.setText(mMakeupStrength.get(mCurrentMakeupGroupIndex) + "");
+//            updateMakeupOptions(mCurrentMakeupGroupIndex, true);
+//        }
+//
+//        if (checkMakeUpSelect()) {
+//            mCameraDisplay.enableMakeUp(true);
+//        } else {
+//            mCameraDisplay.enableMakeUp(false);
+//        }
+//        mMakeupAdapter.notifyDataSetChanged();
+//
+//        clearFullBeautyView();
+//    }
 
-        EffectInfoDataHelper.getInstance().filterStrength = mDefaultFilterStrength / 100f;
-        if (position == 0) {
-            lastIndex = -1;
-            EffectInfoDataHelper.getInstance().fullBeautyName = "";
-            mMakeupAdapter.setSelectedPosition(position);
-            mMakeupOptionSelectedIndex.put(mMakeupOptionIndex.get(groupName), position);
-
-            mFilterStrengthLayout.setVisibility(View.INVISIBLE);
-            mCameraDisplay.removeMakeupByType(mCurrentMakeupGroupIndex);
-            updateMakeupOptions(mCurrentMakeupGroupIndex, false);
-        } else if (position == mMakeupOptionSelectedIndex.get(mMakeupOptionIndex.get(groupName))) {
-            mMakeupAdapter.setSelectedPosition(0);
-            mMakeupOptionSelectedIndex.put(mMakeupOptionIndex.get(groupName), 0);
-
-            mFilterStrengthLayout.setVisibility(View.INVISIBLE);
-            mCameraDisplay.removeMakeupByType(mCurrentMakeupGroupIndex);
-            updateMakeupOptions(mCurrentMakeupGroupIndex, false);
-        } else {
-            if (mCurrentMakeupGroupIndex == Constants.ST_MAKEUP_ALL) {
-                resetMakeup(false, false);
-            }
-            mMakeupAdapter.setSelectedPosition(position);
-            mMakeupOptionSelectedIndex.put(mMakeupOptionIndex.get(groupName), position);
-
-            mCameraDisplay.setMakeupForType(mCurrentMakeupGroupIndex, mMakeupLists.get(getMakeupNameOfType(mCurrentMakeupGroupIndex)).get(position).path);
-            mCameraDisplay.setStrengthForType(mCurrentMakeupGroupIndex, (float) mMakeupStrength.get(mCurrentMakeupGroupIndex) / 100.f);
-            mFilterStrengthLayout.setVisibility(View.VISIBLE);
-            mFilterStrengthBar.setProgress(mMakeupStrength.get(mCurrentMakeupGroupIndex));
-            mFilterStrengthText.setText(mMakeupStrength.get(mCurrentMakeupGroupIndex) + "");
-            updateMakeupOptions(mCurrentMakeupGroupIndex, true);
-        }
-
-        if (checkMakeUpSelect()) {
-            mCameraDisplay.enableMakeUp(true);
-        } else {
-            mCameraDisplay.enableMakeUp(false);
-        }
-        mMakeupAdapter.notifyDataSetChanged();
-
-        clearFullBeautyView();
-    }
-
-    private void initMakeUpListener(final String groupName, final List<SenseArMaterial> materials) {
-        mMakeupAdapters.get(groupName).setClickMakeupListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                {
-                    final MakeupAdapter mMakeupAdapter = mMakeupAdapters.get(groupName);
-                    final int position = Integer.parseInt(v.getTag().toString());
-                    final MakeupItem stickerItem = mMakeupAdapters.get(groupName).getItem(position);
-                    if (stickerItem.state == StickerState.NORMAL_STATE && materials != null) {
-                        if (!NetworkUtils.isNetworkAvailable(getApplicationContext())) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getApplicationContext(), "Network unavailable.", Toast.LENGTH_LONG).show();
-                                }
-                            });
-                            return;
-                        }
-                        stickerItem.state = StickerState.LOADING_STATE;
-                        notifyMakeUpViewState(stickerItem, position, groupName);
-                        SenseArMaterial sarm = getSenseArMaterialByName(materials, stickerItem.name);
-                        SenseArMaterialService.shareInstance().downloadMaterial(CameraActivity.this, sarm, new SenseArMaterialService.DownloadMaterialListener() {
-                            @Override
-                            public void onSuccess(final SenseArMaterial material) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        stickerItem.path = material.cachedPath;
-                                        stickerItem.state = StickerState.DONE_STATE;
-                                        clickMakeUpItem(position, null, null, mMakeupAdapter, groupName);
-                                        notifyMakeUpViewState(stickerItem, position, groupName);
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onFailure(SenseArMaterial senseArMaterial, int i, String s) {
-                                Log.i(TAG, "下载失败");
-                            }
-
-                            @Override
-                            public void onProgress(SenseArMaterial senseArMaterial, float v, int i) {
-
-                            }
-                        });
-
-
-                    } else if (stickerItem.state == StickerState.DONE_STATE) {
-                        clickMakeUpItem(position, null, null, mMakeupAdapter, groupName);
-                    }
-                }
-            }
-        });
-    }
+//    private void initMakeUpListener(final String groupName, final List<SenseArMaterial> materials) {
+//        mMakeupAdapters.get(groupName).setClickMakeupListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                {
+//                    final MakeupAdapter mMakeupAdapter = mMakeupAdapters.get(groupName);
+//                    final int position = Integer.parseInt(v.getTag().toString());
+//                    final MakeupItem stickerItem = mMakeupAdapters.get(groupName).getItem(position);
+//                    if (stickerItem.state == StickerState.NORMAL_STATE && materials != null) {
+//                        if (!NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    Toast.makeText(getApplicationContext(), "Network unavailable.", Toast.LENGTH_LONG).show();
+//                                }
+//                            });
+//                            return;
+//                        }
+//                        stickerItem.state = StickerState.LOADING_STATE;
+//                        notifyMakeUpViewState(stickerItem, position, groupName);
+//                        SenseArMaterial sarm = getSenseArMaterialByName(materials, stickerItem.name);
+//                        SenseArMaterialService.shareInstance().downloadMaterial(CameraActivity.this, sarm, new SenseArMaterialService.DownloadMaterialListener() {
+//                            @Override
+//                            public void onSuccess(final SenseArMaterial material) {
+//                                runOnUiThread(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        stickerItem.path = material.cachedPath;
+//                                        stickerItem.state = StickerState.DONE_STATE;
+//                                        clickMakeUpItem(position, null, null, mMakeupAdapter, groupName);
+//                                        notifyMakeUpViewState(stickerItem, position, groupName);
+//                                    }
+//                                });
+//                            }
+//
+//                            @Override
+//                            public void onFailure(SenseArMaterial senseArMaterial, int i, String s) {
+//                                Log.i(TAG, "下载失败");
+//                            }
+//
+//                            @Override
+//                            public void onProgress(SenseArMaterial senseArMaterial, float v, int i) {
+//
+//                            }
+//                        });
+//
+//
+//                    } else if (stickerItem.state == StickerState.DONE_STATE) {
+//                        clickMakeUpItem(position, null, null, mMakeupAdapter, groupName);
+//                    }
+//                }
+//            }
+//        });
+//    }
 
     private void resetSetBeautyParam(int beautyOptionsPosition) {
         switch (beautyOptionsPosition) {
@@ -3706,21 +3706,21 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
     /**
      * 首先鉴权，鉴权成功后，根据group id 获取相应的group 下的素材列表
      */
-    private void initStickerListFromNet() {
-        SenseArMaterialService.shareInstance().authorizeWithAppId(this, APPID, APPKEY, new SenseArMaterialService.OnAuthorizedListener() {
-            @Override
-            public void onSuccess() {
-                LogUtils.d(TAG, "鉴权成功！");
-                fetchGroupMaterialList(mStickerOptionsList);
-                fetchMakeUpGroupMaterialList(MAKE_UP_OPTIONS_LIST);
-            }
-
-            @Override
-            public void onFailure(SenseArMaterialService.AuthorizeErrorCode errorCode, String errorMsg) {
-                LogUtils.d(TAG, String.format(Locale.getDefault(), "鉴权失败！%d, %s", errorCode, errorMsg));
-            }
-        });
-    }
+//    private void initStickerListFromNet() {
+//        SenseArMaterialService.shareInstance().authorizeWithAppId(this, APPID, APPKEY, new SenseArMaterialService.OnAuthorizedListener() {
+//            @Override
+//            public void onSuccess() {
+//                LogUtils.d(TAG, "鉴权成功！");
+//                fetchGroupMaterialList(mStickerOptionsList);
+//                fetchMakeUpGroupMaterialList(MAKE_UP_OPTIONS_LIST);
+//            }
+//
+//            @Override
+//            public void onFailure(SenseArMaterialService.AuthorizeErrorCode errorCode, String errorMsg) {
+//                LogUtils.d(TAG, String.format(Locale.getDefault(), "鉴权失败！%d, %s", errorCode, errorMsg));
+//            }
+//        });
+//    }
 
     /**
      * 初始化tab 点击事件
@@ -3771,236 +3771,236 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
         });
     }
 
-    private void fetchMakeUpGroupMaterialInfo(final String groupName, final List<SenseArMaterial> materials, final int index) {
-        if (materials == null || materials.size() <= 0) {
-            return;
-        }
-        final ArrayList<MakeupItem> stickerList = mMakeupLists.get(groupName);
-        mMakeupLists.put(groupName, stickerList);
-        int localMakeUpLength = stickerList.size();
-
-        mMakeupAdapters.put(groupName, new MakeupAdapter(mMakeupLists.get(groupName), getApplicationContext()));
-        mMakeupAdapters.get(groupName).setSelectedPosition(-1);
-        Log.d(TAG, "group id is " + groupName + " materials size is " + materials.size());
-        //initStickerListener(groupId, index, materials);
-        for (int i = 0; i < materials.size(); i++) {
-            SenseArMaterial sarm = materials.get(i);
-            Bitmap bitmap = null;
-            try {
-                bitmap = ImageUtils.getImageSync(sarm.thumbnail, this);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (bitmap == null) {
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.none);
-            }
-            String path = "";
-            //如果已经下载则传入路径地址
-            if (SenseArMaterialService.shareInstance().isMaterialDownloaded(this, sarm)) {
-                path = SenseArMaterialService.shareInstance().getMaterialCachedPath(this, sarm);
-            }
-            sarm.cachedPath = path;
-            stickerList.add(new MakeupItem(sarm.name, bitmap, path));
-        }
-        CollectionSortUtils.sort(stickerList);
-        initMakeUpListener(groupName, materials);// 点击事件转移到这里
-
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    mMakeupOptionsRecycleView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
-                    mMakeupOptionsRecycleView.addItemDecoration(new SpaceItemDecoration(0));
-                    switch (mCurrentMakeupGroupIndex) {
-                        case Constants.ST_MAKEUP_ALL://整妆
-                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_all"));
-                            break;
-                        case Constants.ST_MAKEUP_HAIR_DYE://染发
-                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_hairdye"));
-                            break;
-                        case Constants.ST_MAKEUP_LIP:
-                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_lip"));
-                            break;
-                        case Constants.ST_MAKEUP_BLUSH:
-                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_blush"));
-                            break;
-                        case Constants.ST_MAKEUP_HIGHLIGHT://修容
-                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_highlight"));
-                            break;
-                        case Constants.ST_MAKEUP_BROW://眉毛
-                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_brow"));
-                            break;
-                        case Constants.ST_MAKEUP_EYE://眼影
-                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_eye"));
-                            break;
-                        case Constants.ST_MAKEUP_EYELINER://眼线
-                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_eyeliner"));
-                            break;
-                        case Constants.ST_MAKEUP_EYELASH://眼睫毛
-                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_eyelash"));
-                            break;
-                        case Constants.ST_MAKEUP_EYEBALL://美瞳
-                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_eyeball"));
-                            break;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private void fetchMakeUpGroupMaterialList(final List<MakeUpOptionsItem> groups) {
-        for (int i = 0; i < groups.size(); i++) {
-            final MakeUpOptionsItem item = groups.get(i);
-            //使用网络下载
-            final int j = i;
-            SenseArMaterialService.shareInstance().fetchMaterialsFromGroupId("", item.groupId, SenseArMaterialType.Effect, new SenseArMaterialService.FetchMaterialListener() {
-                @Override
-                public void onSuccess(final List<SenseArMaterial> materials) {
-                    fetchMakeUpGroupMaterialInfo(item.groupName, materials, j);
-                }
-
-                @Override
-                public void onFailure(int code, String message) {
-                    Log.e(TAG, String.format(Locale.getDefault(), "下载素材信息失败！%d, %s", code, TextUtils.isEmpty(message) ? "" : message));
-                }
-            });
-        }
-
-    }
+//    private void fetchMakeUpGroupMaterialInfo(final String groupName, final List<SenseArMaterial> materials, final int index) {
+//        if (materials == null || materials.size() <= 0) {
+//            return;
+//        }
+//        final ArrayList<MakeupItem> stickerList = mMakeupLists.get(groupName);
+//        mMakeupLists.put(groupName, stickerList);
+//        int localMakeUpLength = stickerList.size();
+//
+//        mMakeupAdapters.put(groupName, new MakeupAdapter(mMakeupLists.get(groupName), getApplicationContext()));
+//        mMakeupAdapters.get(groupName).setSelectedPosition(-1);
+//        Log.d(TAG, "group id is " + groupName + " materials size is " + materials.size());
+//        //initStickerListener(groupId, index, materials);
+//        for (int i = 0; i < materials.size(); i++) {
+//            SenseArMaterial sarm = materials.get(i);
+//            Bitmap bitmap = null;
+//            try {
+//                bitmap = ImageUtils.getImageSync(sarm.thumbnail, this);
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            if (bitmap == null) {
+//                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.none);
+//            }
+//            String path = "";
+//            //如果已经下载则传入路径地址
+//            if (SenseArMaterialService.shareInstance().isMaterialDownloaded(this, sarm)) {
+//                path = SenseArMaterialService.shareInstance().getMaterialCachedPath(this, sarm);
+//            }
+//            sarm.cachedPath = path;
+//            stickerList.add(new MakeupItem(sarm.name, bitmap, path));
+//        }
+//        CollectionSortUtils.sort(stickerList);
+//        initMakeUpListener(groupName, materials);// 点击事件转移到这里
+//
+//        mHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    mMakeupOptionsRecycleView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL));
+//                    mMakeupOptionsRecycleView.addItemDecoration(new SpaceItemDecoration(0));
+//                    switch (mCurrentMakeupGroupIndex) {
+//                        case Constants.ST_MAKEUP_ALL://整妆
+//                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_all"));
+//                            break;
+//                        case Constants.ST_MAKEUP_HAIR_DYE://染发
+//                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_hairdye"));
+//                            break;
+//                        case Constants.ST_MAKEUP_LIP:
+//                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_lip"));
+//                            break;
+//                        case Constants.ST_MAKEUP_BLUSH:
+//                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_blush"));
+//                            break;
+//                        case Constants.ST_MAKEUP_HIGHLIGHT://修容
+//                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_highlight"));
+//                            break;
+//                        case Constants.ST_MAKEUP_BROW://眉毛
+//                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_brow"));
+//                            break;
+//                        case Constants.ST_MAKEUP_EYE://眼影
+//                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_eye"));
+//                            break;
+//                        case Constants.ST_MAKEUP_EYELINER://眼线
+//                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_eyeliner"));
+//                            break;
+//                        case Constants.ST_MAKEUP_EYELASH://眼睫毛
+//                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_eyelash"));
+//                            break;
+//                        case Constants.ST_MAKEUP_EYEBALL://美瞳
+//                            mMakeupOptionsRecycleView.setAdapter(mMakeupAdapters.get("makeup_eyeball"));
+//                            break;
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//    }
+//
+//    private void fetchMakeUpGroupMaterialList(final List<MakeUpOptionsItem> groups) {
+//        for (int i = 0; i < groups.size(); i++) {
+//            final MakeUpOptionsItem item = groups.get(i);
+//            //使用网络下载
+//            final int j = i;
+//            SenseArMaterialService.shareInstance().fetchMaterialsFromGroupId("", item.groupId, SenseArMaterialType.Effect, new SenseArMaterialService.FetchMaterialListener() {
+//                @Override
+//                public void onSuccess(final List<SenseArMaterial> materials) {
+//                    fetchMakeUpGroupMaterialInfo(item.groupName, materials, j);
+//                }
+//
+//                @Override
+//                public void onFailure(int code, String message) {
+//                    Log.e(TAG, String.format(Locale.getDefault(), "下载素材信息失败！%d, %s", code, TextUtils.isEmpty(message) ? "" : message));
+//                }
+//            });
+//        }
+//
+//    }
 
     /**
      * 根据group id 对应素材列表
      *
      * @param groups group id 列表
      */
-    private void fetchGroupMaterialList(final List<StickerOptionsItem> groups) {
-        String[] array = {"sticker_new_engine", "object_track", "sticker_add_package"};
-        for (int i = 0; i < groups.size(); i++) {
-            final StickerOptionsItem groupId = groups.get(i);
-            if (STUtils.contains(array, groupId.name)) continue;
-            //使用网络下载
-            final int j = i;
-            SenseArMaterialService.shareInstance().fetchMaterialsFromGroupId("", groupId.name, SenseArMaterialType.Effect, new SenseArMaterialService.FetchMaterialListener() {
-                @Override
-                public void onSuccess(final List<SenseArMaterial> materials) {
-                    fetchGroupMaterialInfo(groupId.name, materials, j);
-                    if (groupId.name == GROUP_NEW) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mStickersRecycleView.setAdapter(mStickerAdapters.get(GROUP_NEW));
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onFailure(int code, String message) {
-                    LogUtils.e(TAG, String.format(Locale.getDefault(), "下载素材信息失败！%d, %s", code, TextUtils.isEmpty(message) ? "" : message));
-                }
-            });
-        }
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (mStickerOptionsRecycleView.getAdapter() == null) {
-                    mStickerOptionsRecycleView.setAdapter(mStickerOptionsAdapter);
-                }
-                mStickerOptionsAdapter.setSelectedPosition(0);
-                mStickerOptionsAdapter.notifyDataSetChanged();
-            }
-        });
-    }
-
-    // 初始化素材列表中的点击事件回调
-    private void initStickerListener(final String groupId, final int index, final List<SenseArMaterial> materials) {
-        mStickerAdapters.get(groupId).setClickStickerListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!NetworkUtils.isNetworkAvailable(getApplicationContext())) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), "Network unavailable.", Toast.LENGTH_LONG).show();
-
-                        }
-                    });
-                }
-                mTipsLayout.setVisibility(View.GONE);
-                final int position = Integer.parseInt(v.getTag().toString());
-                final StickerItem stickerItem = mStickerAdapters.get(groupId).getItem(position);
-                if (stickerItem != null && stickerItem.state == StickerState.LOADING_STATE) {
-                    LogUtils.d(TAG, String.format(Locale.getDefault(), "正在下载，请稍后点击!"));
-                    return;
-                }
-
-                if (mCurrentStickerOptionsIndex == index && mCurrentStickerPosition == position) {
-                    preMaterialId = "";
-                    mStickerAdapters.get(groupId).setSelectedPosition(-1);
-                    mCurrentStickerOptionsIndex = -1;
-                    mCurrentStickerPosition = -1;
-                    mLastStickerPosition = -1;
-
-                    findViewById(R.id.iv_close_sticker).setBackground(getResources().getDrawable(R.drawable.close_sticker_selected));
-                    mCameraDisplay.enableSticker(false);
-                    mCameraDisplay.removeAllStickers();
-                    mStickerAdapters.get(groupId).notifyDataSetChanged();
-                    recoverUI();
-                    return;
-                }
-                SenseArMaterial sarm = materials.get(position);
-                preMaterialId = sarm.id;
-                //如果素材还未下载，点击时需要下载
-                if (stickerItem.state == StickerState.NORMAL_STATE) {
-                    stickerItem.state = StickerState.LOADING_STATE;
-                    notifyStickerViewState(stickerItem, position, groupId);
+//    private void fetchGroupMaterialList(final List<StickerOptionsItem> groups) {
+//        String[] array = {"sticker_new_engine", "object_track", "sticker_add_package"};
+//        for (int i = 0; i < groups.size(); i++) {
+//            final StickerOptionsItem groupId = groups.get(i);
+//            if (STUtils.contains(array, groupId.name)) continue;
+//            //使用网络下载
+//            final int j = i;
+//            SenseArMaterialService.shareInstance().fetchMaterialsFromGroupId("", groupId.name, SenseArMaterialType.Effect, new SenseArMaterialService.FetchMaterialListener() {
+//                @Override
+//                public void onSuccess(final List<SenseArMaterial> materials) {
+//                    fetchGroupMaterialInfo(groupId.name, materials, j);
+//                    if (groupId.name == GROUP_NEW) {
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                mStickersRecycleView.setAdapter(mStickerAdapters.get(GROUP_NEW));
+//                            }
+//                        });
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(int code, String message) {
+//                    LogUtils.e(TAG, String.format(Locale.getDefault(), "下载素材信息失败！%d, %s", code, TextUtils.isEmpty(message) ? "" : message));
+//                }
+//            });
+//        }
+//
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (mStickerOptionsRecycleView.getAdapter() == null) {
+//                    mStickerOptionsRecycleView.setAdapter(mStickerOptionsAdapter);
+//                }
+//                mStickerOptionsAdapter.setSelectedPosition(0);
+//                mStickerOptionsAdapter.notifyDataSetChanged();
+//            }
+//        });
+//    }
+//
+//    // 初始化素材列表中的点击事件回调
+//    private void initStickerListener(final String groupId, final int index, final List<SenseArMaterial> materials) {
+//        mStickerAdapters.get(groupId).setClickStickerListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (!NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Toast.makeText(getApplicationContext(), "Network unavailable.", Toast.LENGTH_LONG).show();
+//
+//                        }
+//                    });
+//                }
+//                mTipsLayout.setVisibility(View.GONE);
+//                final int position = Integer.parseInt(v.getTag().toString());
+//                final StickerItem stickerItem = mStickerAdapters.get(groupId).getItem(position);
+//                if (stickerItem != null && stickerItem.state == StickerState.LOADING_STATE) {
+//                    LogUtils.d(TAG, String.format(Locale.getDefault(), "正在下载，请稍后点击!"));
+//                    return;
+//                }
+//
+//                if (mCurrentStickerOptionsIndex == index && mCurrentStickerPosition == position) {
+//                    preMaterialId = "";
+//                    mStickerAdapters.get(groupId).setSelectedPosition(-1);
+//                    mCurrentStickerOptionsIndex = -1;
+//                    mCurrentStickerPosition = -1;
+//                    mLastStickerPosition = -1;
+//
+//                    findViewById(R.id.iv_close_sticker).setBackground(getResources().getDrawable(R.drawable.close_sticker_selected));
+//                    mCameraDisplay.enableSticker(false);
+//                    mCameraDisplay.removeAllStickers();
 //                    mStickerAdapters.get(groupId).notifyDataSetChanged();
-                    SenseArMaterialService.shareInstance().downloadMaterial(CameraActivity.this, sarm, new SenseArMaterialService.DownloadMaterialListener() {
-                        @Override
-                        public void onSuccess(final SenseArMaterial material) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    stickerItem.path = material.cachedPath;
-                                    stickerItem.state = StickerState.DONE_STATE;
-                                    //如果本次下载是用户用户最后一次选中项，则直接应用
-                                    if (preMaterialId.equals(material.id)) {
-                                        clickStickerItem(position, index, groupId);
-                                    }
-                                    notifyStickerViewState(stickerItem, position, groupId);
-//                                    mStickerAdapters.get(groupId).notifyDataSetChanged();
-                                }
-                            });
-                            LogUtils.d(TAG, String.format(Locale.getDefault(), "素材下载成功:%s,cached path is %s", material.materials, material.cachedPath));
-                        }
-
-                        @Override
-                        public void onFailure(SenseArMaterial material, final int code, String message) {
-                            LogUtils.d(TAG, String.format(Locale.getDefault(), "素材下载失败:%s", material.materials));
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    stickerItem.state = StickerState.NORMAL_STATE;
-                                    notifyStickerViewState(stickerItem, position, groupId);
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onProgress(SenseArMaterial material, float progress, int size) {
-
-                        }
-                    });
-                } else if (stickerItem.state == StickerState.DONE_STATE) {
-                    clickStickerItem(position, index, groupId);
-                }
-            }
-        });
-    }
+//                    recoverUI();
+//                    return;
+//                }
+//                SenseArMaterial sarm = materials.get(position);
+//                preMaterialId = sarm.id;
+//                //如果素材还未下载，点击时需要下载
+//                if (stickerItem.state == StickerState.NORMAL_STATE) {
+//                    stickerItem.state = StickerState.LOADING_STATE;
+//                    notifyStickerViewState(stickerItem, position, groupId);
+////                    mStickerAdapters.get(groupId).notifyDataSetChanged();
+//                    SenseArMaterialService.shareInstance().downloadMaterial(CameraActivity.this, sarm, new SenseArMaterialService.DownloadMaterialListener() {
+//                        @Override
+//                        public void onSuccess(final SenseArMaterial material) {
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    stickerItem.path = material.cachedPath;
+//                                    stickerItem.state = StickerState.DONE_STATE;
+//                                    //如果本次下载是用户用户最后一次选中项，则直接应用
+//                                    if (preMaterialId.equals(material.id)) {
+//                                        clickStickerItem(position, index, groupId);
+//                                    }
+//                                    notifyStickerViewState(stickerItem, position, groupId);
+////                                    mStickerAdapters.get(groupId).notifyDataSetChanged();
+//                                }
+//                            });
+//                            LogUtils.d(TAG, String.format(Locale.getDefault(), "素材下载成功:%s,cached path is %s", material.materials, material.cachedPath));
+//                        }
+//
+//                        @Override
+//                        public void onFailure(SenseArMaterial material, final int code, String message) {
+//                            LogUtils.d(TAG, String.format(Locale.getDefault(), "素材下载失败:%s", material.materials));
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    stickerItem.state = StickerState.NORMAL_STATE;
+//                                    notifyStickerViewState(stickerItem, position, groupId);
+//                                }
+//                            });
+//                        }
+//
+//                        @Override
+//                        public void onProgress(SenseArMaterial material, float progress, int size) {
+//
+//                        }
+//                    });
+//                } else if (stickerItem.state == StickerState.DONE_STATE) {
+//                    clickStickerItem(position, index, groupId);
+//                }
+//            }
+//        });
+//    }
 
     private void clickStickerItem(int position, int index, String groupId) {
         resetNewStickerAdapter();
@@ -4122,37 +4122,37 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
      * @param groupId   组id
      * @param materials 服务器返回的素材list
      */
-    private void fetchGroupMaterialInfo(final String groupId, final List<SenseArMaterial> materials, final int index) {
-        if (materials == null || materials.size() <= 0) {
-            return;
-        }
-        final ArrayList<StickerItem> stickerList = new ArrayList<>();
-        mStickerlists.put(groupId, stickerList);
-        mStickerAdapters.put(groupId, new StickerAdapter(mStickerlists.get(groupId), getApplicationContext()));
-        mStickerAdapters.get(groupId).setSelectedPosition(-1);
-        LogUtils.d(TAG, "group id is " + groupId + " materials size is " + materials.size());
-        initStickerListener(groupId, index, materials);
-        for (int i = 0; i < materials.size(); i++) {
-            SenseArMaterial sarm = materials.get(i);
-            Bitmap bitmap = null;
-            try {
-                bitmap = ImageUtils.getImageSync(sarm.thumbnail, CameraActivity.this);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (bitmap == null) {
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.none);
-            }
-            String path = "";
-            //如果已经下载则传入路径地址
-            if (SenseArMaterialService.shareInstance().isMaterialDownloaded(CameraActivity.this, sarm)) {
-                path = SenseArMaterialService.shareInstance().getMaterialCachedPath(CameraActivity.this, sarm);
-            }
-            sarm.cachedPath = path;
-            stickerList.add(new StickerItem(sarm.name, bitmap, path));
-        }
-    }
+//    private void fetchGroupMaterialInfo(final String groupId, final List<SenseArMaterial> materials, final int index) {
+//        if (materials == null || materials.size() <= 0) {
+//            return;
+//        }
+//        final ArrayList<StickerItem> stickerList = new ArrayList<>();
+//        mStickerlists.put(groupId, stickerList);
+//        mStickerAdapters.put(groupId, new StickerAdapter(mStickerlists.get(groupId), getApplicationContext()));
+//        mStickerAdapters.get(groupId).setSelectedPosition(-1);
+//        LogUtils.d(TAG, "group id is " + groupId + " materials size is " + materials.size());
+//        initStickerListener(groupId, index, materials);
+//        for (int i = 0; i < materials.size(); i++) {
+//            SenseArMaterial sarm = materials.get(i);
+//            Bitmap bitmap = null;
+//            try {
+//                bitmap = ImageUtils.getImageSync(sarm.thumbnail, CameraActivity.this);
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            if (bitmap == null) {
+//                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.none);
+//            }
+//            String path = "";
+//            //如果已经下载则传入路径地址
+//            if (SenseArMaterialService.shareInstance().isMaterialDownloaded(CameraActivity.this, sarm)) {
+//                path = SenseArMaterialService.shareInstance().getMaterialCachedPath(CameraActivity.this, sarm);
+//            }
+//            sarm.cachedPath = path;
+//            stickerList.add(new StickerItem(sarm.name, bitmap, path));
+//        }
+//    }
 
     //
     private boolean checkMicroType(int beautyOptionsPosition) {

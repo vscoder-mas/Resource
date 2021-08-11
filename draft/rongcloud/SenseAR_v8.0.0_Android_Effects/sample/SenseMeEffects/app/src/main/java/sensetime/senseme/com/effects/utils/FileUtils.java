@@ -13,8 +13,6 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
-import com.sensetime.sensearsourcemanager.SenseArMaterial;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -683,78 +681,78 @@ public class FileUtils {
         return filename;
     }
 
-    public static void writeMaterialsToJsonFile(List<SenseArMaterial> materials, String groupId, String rootPath) {
-        if (materials != null && materials.size() > 0) {
-            JSONObject jsonObject = new JSONObject();
-            JSONArray materialsJson = new JSONArray();
-            try {
-                for (SenseArMaterial material : materials) {
-                    JSONObject jsonMaterial = new JSONObject();
-                    jsonMaterial.put("type", material.type);
-                    jsonMaterial.put("id", material.id);
-                    jsonMaterial.put("materialFileId", material.materialFileId);
-                    jsonMaterial.put("materialInstructions", material.materialInstructions);
-                    jsonMaterial.put("extend_info", material.extend_info);
-                    jsonMaterial.put("extend_info2", material.extend_info2);
-                    jsonMaterial.put("thumbnail", material.thumbnail);
-                    jsonMaterial.put("name", material.name);
-                    jsonMaterial.put("cachedPath", material.cachedPath);
-                    materialsJson.put(jsonMaterial);
-                }
-                jsonObject.put("materials", materialsJson);
-                String jsonStr = jsonObject.toString();
-                File file = new File(rootPath + "/" + groupId);
-                file.createNewFile();
-                FileOutputStream fileOutputStream = new FileOutputStream(file);
-                fileOutputStream.write(jsonStr.getBytes());
-                fileOutputStream.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    public static void writeMaterialsToJsonFile(List<SenseArMaterial> materials, String groupId, String rootPath) {
+//        if (materials != null && materials.size() > 0) {
+//            JSONObject jsonObject = new JSONObject();
+//            JSONArray materialsJson = new JSONArray();
+//            try {
+//                for (SenseArMaterial material : materials) {
+//                    JSONObject jsonMaterial = new JSONObject();
+//                    jsonMaterial.put("type", material.type);
+//                    jsonMaterial.put("id", material.id);
+//                    jsonMaterial.put("materialFileId", material.materialFileId);
+//                    jsonMaterial.put("materialInstructions", material.materialInstructions);
+//                    jsonMaterial.put("extend_info", material.extend_info);
+//                    jsonMaterial.put("extend_info2", material.extend_info2);
+//                    jsonMaterial.put("thumbnail", material.thumbnail);
+//                    jsonMaterial.put("name", material.name);
+//                    jsonMaterial.put("cachedPath", material.cachedPath);
+//                    materialsJson.put(jsonMaterial);
+//                }
+//                jsonObject.put("materials", materialsJson);
+//                String jsonStr = jsonObject.toString();
+//                File file = new File(rootPath + "/" + groupId);
+//                file.createNewFile();
+//                FileOutputStream fileOutputStream = new FileOutputStream(file);
+//                fileOutputStream.write(jsonStr.getBytes());
+//                fileOutputStream.close();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
-    public static List<SenseArMaterial> getMaterialsFromJsonFile(String groupId, String rootPath) {
-        List<SenseArMaterial> result = new ArrayList<>();
-        File file = new File(rootPath + "/" + groupId);
-        if (file.exists()) {
-            try {
-                FileInputStream fileInputStream = new FileInputStream(file);
-                InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-                BufferedReader br = new BufferedReader(inputStreamReader);
-                String line;
-                StringBuilder builder = new StringBuilder();
-                while ((line = br.readLine()) != null) {
-                    builder.append(line);
-                }
-                br.close();
-                inputStreamReader.close();
-                fileInputStream.close();
-
-                JSONObject jsonObject = new JSONObject(builder.toString());
-                JSONArray array = jsonObject.optJSONArray("materials");
-                if (array != null && array.length() > 0) {
-                    for (int i = 0; i < array.length(); i++) {
-                        SenseArMaterial senseArMaterial = new SenseArMaterial();
-                        JSONObject jsonMaterial = array.getJSONObject(i);
-                        senseArMaterial.type = jsonMaterial.optInt("type");
-                        senseArMaterial.id = jsonMaterial.optString("id");
-                        senseArMaterial.materialFileId = jsonMaterial.optString("materialFileId");
-                        senseArMaterial.materialInstructions = jsonMaterial.optString("materialInstructions");
-                        senseArMaterial.extend_info = jsonMaterial.optString("extend_info");
-                        senseArMaterial.extend_info2 = jsonMaterial.optString("extend_info2");
-                        senseArMaterial.thumbnail = jsonMaterial.optString("thumbnail");
-                        senseArMaterial.name = jsonMaterial.optString("name");
-                        senseArMaterial.cachedPath = jsonMaterial.optString("cachedPath");
-                        result.add(senseArMaterial);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return result;
-    }
+//    public static List<SenseArMaterial> getMaterialsFromJsonFile(String groupId, String rootPath) {
+//        List<SenseArMaterial> result = new ArrayList<>();
+//        File file = new File(rootPath + "/" + groupId);
+//        if (file.exists()) {
+//            try {
+//                FileInputStream fileInputStream = new FileInputStream(file);
+//                InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+//                BufferedReader br = new BufferedReader(inputStreamReader);
+//                String line;
+//                StringBuilder builder = new StringBuilder();
+//                while ((line = br.readLine()) != null) {
+//                    builder.append(line);
+//                }
+//                br.close();
+//                inputStreamReader.close();
+//                fileInputStream.close();
+//
+//                JSONObject jsonObject = new JSONObject(builder.toString());
+//                JSONArray array = jsonObject.optJSONArray("materials");
+//                if (array != null && array.length() > 0) {
+//                    for (int i = 0; i < array.length(); i++) {
+//                        SenseArMaterial senseArMaterial = new SenseArMaterial();
+//                        JSONObject jsonMaterial = array.getJSONObject(i);
+//                        senseArMaterial.type = jsonMaterial.optInt("type");
+//                        senseArMaterial.id = jsonMaterial.optString("id");
+//                        senseArMaterial.materialFileId = jsonMaterial.optString("materialFileId");
+//                        senseArMaterial.materialInstructions = jsonMaterial.optString("materialInstructions");
+//                        senseArMaterial.extend_info = jsonMaterial.optString("extend_info");
+//                        senseArMaterial.extend_info2 = jsonMaterial.optString("extend_info2");
+//                        senseArMaterial.thumbnail = jsonMaterial.optString("thumbnail");
+//                        senseArMaterial.name = jsonMaterial.optString("name");
+//                        senseArMaterial.cachedPath = jsonMaterial.optString("cachedPath");
+//                        result.add(senseArMaterial);
+//                    }
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return result;
+//    }
 
     public static ArrayList<MakeupItem> getMakeupFilesFromAssets(Context context, String index){
         ArrayList<MakeupItem> makeupFiles = new ArrayList<MakeupItem>();

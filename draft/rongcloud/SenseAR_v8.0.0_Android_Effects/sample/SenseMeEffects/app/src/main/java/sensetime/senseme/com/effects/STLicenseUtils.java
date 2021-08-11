@@ -2,22 +2,15 @@ package sensetime.senseme.com.effects;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.TextUtils;
 import android.util.Log;
 
-import com.sensetime.sensearsourcemanager.SenseArMaterialService;
 import com.sensetime.stmobile.STMobileAuthentificationNative;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Locale;
 
 import sensetime.senseme.com.effects.utils.LogUtils;
-import sensetime.senseme.com.effects.utils.NetworkUtils;
-
-import static sensetime.senseme.com.effects.utils.Constants.APPID;
-import static sensetime.senseme.com.effects.utils.Constants.APPKEY;
 
 /**
  * Created by leiwang on 2016/12/2.
@@ -47,9 +40,10 @@ public class STLicenseUtils {
 
     //鉴权方式有两种
     public static boolean checkLicense(final Context context){
-        if(USING_SERVER_LICENSE){
-            return checkLicenseFromServer(context);
-        }else{
+        if (USING_SERVER_LICENSE) {
+//            return checkLicenseFromServer(context);
+            return false;
+        } else {
             return checkLicenseFromLocal(context);
         }
     }
@@ -176,74 +170,74 @@ public class STLicenseUtils {
         return true;
     }
 
-    //从服务器拉取License文件，并检查授权
-    public static boolean checkLicenseFromServer(final Context context){
-        if (!NetworkUtils.isNetworkAvailable(context)) {
-            LogUtils.d(TAG, "无网情况下，拉取sdk缓存License文件，激活License授权");
-            byte[] licData = SenseArMaterialService.shareInstance().getLicenseData();
-
-            if(licData != null){
-                Log.e(TAG, "no network : "+ new String(licData) );
-            }else {
-                Log.e(TAG, "no network licData is null " );
-            }
-
-
-            return STLicenseUtils.checkLicenseFromBuffer(context, licData, false);
-        }
-
-        SenseArMaterialService.shareInstance().authorizeWithAppId(context, APPID, APPKEY, new SenseArMaterialService.OnAuthorizedListener() {
-            @Override
-            public void onSuccess() {
-                LogUtils.d(TAG, "鉴权成功！");
-                //鉴权成功后，可以获取远程的lic 文件数据,用来checkLicense
-                byte[] licData = SenseArMaterialService.shareInstance().getLicenseData();
-
-                if(licData != null){
-                    Log.e(TAG, "onSuccess: "+new String(licData) );
-                }else {
-                    Log.e(TAG, "onSuccess: licData is null " );
-                }
-
-                mCheckLicenseRet = STLicenseUtils.checkLicenseFromBuffer(context, licData, false);
-                IsChecked = true;
-            }
-
-            @Override
-            public void onFailure(SenseArMaterialService.AuthorizeErrorCode errorCode, String errorMsg) {
-                LogUtils.d(TAG, String.format(Locale.getDefault(), "鉴权失败！%d, %s", errorCode.ordinal(), TextUtils.isEmpty(errorMsg)?"":errorMsg));
-
-                //鉴权失败后，可以获取缓存的lic 文件数据,用来checkLicense
-                byte[] licData = SenseArMaterialService.shareInstance().getLicenseData();
-                if(licData != null){
-                    Log.e(TAG, "onFailure: "+new String(licData) );
-                }else {
-                    Log.e(TAG, "onFailure: licData is null " );
-                }
-
-                mCheckLicenseRet = STLicenseUtils.checkLicenseFromBuffer(context, licData, false);
-                IsChecked = true;
-            }
-        });
-
-        while(!IsChecked){
-            try {
-                Thread.sleep(100);
-            }catch (Exception e){
-                Log.e(TAG, "sleep Exception: " + e.getMessage() );
-            }
-        }
-
-        return mCheckLicenseRet;
-    }
+//    //从服务器拉取License文件，并检查授权
+//    public static boolean checkLicenseFromServer(final Context context){
+//        if (!NetworkUtils.isNetworkAvailable(context)) {
+//            LogUtils.d(TAG, "无网情况下，拉取sdk缓存License文件，激活License授权");
+//            byte[] licData = SenseArMaterialService.shareInstance().getLicenseData();
+//
+//            if(licData != null){
+//                Log.e(TAG, "no network : "+ new String(licData) );
+//            }else {
+//                Log.e(TAG, "no network licData is null " );
+//            }
+//
+//
+//            return STLicenseUtils.checkLicenseFromBuffer(context, licData, false);
+//        }
+//
+//        SenseArMaterialService.shareInstance().authorizeWithAppId(context, APPID, APPKEY, new SenseArMaterialService.OnAuthorizedListener() {
+//            @Override
+//            public void onSuccess() {
+//                LogUtils.d(TAG, "鉴权成功！");
+//                //鉴权成功后，可以获取远程的lic 文件数据,用来checkLicense
+//                byte[] licData = SenseArMaterialService.shareInstance().getLicenseData();
+//
+//                if(licData != null){
+//                    Log.e(TAG, "onSuccess: "+new String(licData) );
+//                }else {
+//                    Log.e(TAG, "onSuccess: licData is null " );
+//                }
+//
+//                mCheckLicenseRet = STLicenseUtils.checkLicenseFromBuffer(context, licData, false);
+//                IsChecked = true;
+//            }
+//
+//            @Override
+//            public void onFailure(SenseArMaterialService.AuthorizeErrorCode errorCode, String errorMsg) {
+//                LogUtils.d(TAG, String.format(Locale.getDefault(), "鉴权失败！%d, %s", errorCode.ordinal(), TextUtils.isEmpty(errorMsg)?"":errorMsg));
+//
+//                //鉴权失败后，可以获取缓存的lic 文件数据,用来checkLicense
+//                byte[] licData = SenseArMaterialService.shareInstance().getLicenseData();
+//                if(licData != null){
+//                    Log.e(TAG, "onFailure: "+new String(licData) );
+//                }else {
+//                    Log.e(TAG, "onFailure: licData is null " );
+//                }
+//
+//                mCheckLicenseRet = STLicenseUtils.checkLicenseFromBuffer(context, licData, false);
+//                IsChecked = true;
+//            }
+//        });
+//
+//        while(!IsChecked){
+//            try {
+//                Thread.sleep(100);
+//            }catch (Exception e){
+//                Log.e(TAG, "sleep Exception: " + e.getMessage() );
+//            }
+//        }
+//
+//        return mCheckLicenseRet;
+//    }
 
     //从本地读取License文件，并检查授权
-    public static boolean checkLicenseFromLocal(final Context context){
-        if(USING_ASSETS_ONLINE_LICENSE){
+    public static boolean checkLicenseFromLocal(final Context context) {
+        if (USING_ASSETS_ONLINE_LICENSE) {
             if (!STLicenseUtils.checkLicenseFromAssetFile(context, ONLINE_LICENSE_NAME, true)) {
                 return false;
             }
-        }else {
+        } else {
             if (!STLicenseUtils.checkLicenseFromAssetFile(context, LOCAL_LICENSE_NAME, false)) {
                 return false;
             }

@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.sensetime.sensearsourcemanager.SenseArMaterial;
+//import com.sensetime.sensearsourcemanager.SenseArMaterial;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -142,13 +142,13 @@ public class BaseActivity extends Activity {
         }
     }
 
-    protected SenseArMaterial getSenseArMaterialByName(List<SenseArMaterial> list, String name) {
-        SenseArMaterial sarm = null;
-        for (SenseArMaterial item : list) {
-            if (item.name.equals(name)) {
-                sarm = item;
-            }
-        }
-        return sarm;
-    }
+//    protected SenseArMaterial getSenseArMaterialByName(List<SenseArMaterial> list, String name) {
+//        SenseArMaterial sarm = null;
+//        for (SenseArMaterial item : list) {
+//            if (item.name.equals(name)) {
+//                sarm = item;
+//            }
+//        }
+//        return sarm;
+//    }
 }

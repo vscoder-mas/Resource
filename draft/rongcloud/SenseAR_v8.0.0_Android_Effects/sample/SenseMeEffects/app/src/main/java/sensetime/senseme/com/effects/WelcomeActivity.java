@@ -17,8 +17,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sensetime.sensearsourcemanager.SenseArMaterialService;
-import com.sensetime.sensearsourcemanager.SenseArServerType;
+//import com.sensetime.sensearsourcemanager.SenseArMaterialService;
+//import com.sensetime.sensearsourcemanager.SenseArServerType;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -91,10 +91,10 @@ public class WelcomeActivity extends Activity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
-        //正式
-        SenseArMaterialService.setServerType(SenseArServerType.DomesticServer);
-        //需要初始化一次
-        SenseArMaterialService.shareInstance().initialize(getApplicationContext());
+//        //正式
+//        SenseArMaterialService.setServerType(SenseArServerType.DomesticServer);
+//        //需要初始化一次
+//        SenseArMaterialService.shareInstance().initialize(getApplicationContext());
 //        //测试
 //        SenseArMaterialService.setServerType(SenseArServerType.DomesticTestServer);
 //        //国际

@@ -42,7 +42,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import sensetime.senseme.com.effects.activity.CameraActivity;
-import sensetime.senseme.com.effects.activity.ImageActivity;
+//import sensetime.senseme.com.effects.activity.ImageActivity;
 import sensetime.senseme.com.effects.SenseMeApplication;
 import sensetime.senseme.com.effects.display.glutils.ImageInputRender;
 import sensetime.senseme.com.effects.encoder.mediacodec.utils.CollectionUtils;
@@ -235,22 +235,22 @@ public class ImageDisplay extends BaseDisplay implements Renderer{
 		};
 	}
 
-	public void updateBeautyParamsUI() {
-		int beautyOverlapCount = mSTMobileEffectNative.getOverlappedBeautyCount();
-		Log.d(TAG, "updateBeautyParamsUI: beautyOverlapCount:" + beautyOverlapCount);
-		mLastBeautyOverlapCount = beautyOverlapCount;
-		if(beautyOverlapCount > 0){
-			STEffectBeautyInfo[] beautyInfos = mSTMobileEffectNative.getOverlappedBeauty(beautyOverlapCount);
-			Log.d(TAG, "run: " + Arrays.toString(beautyInfos));
-			Log.d(TAG, "size: " +beautyInfos.length);
-			setBeautyParamsFromPackage(beautyInfos);
-
-			Message message1 = mHandler.obtainMessage(ImageActivity.MSG_NEED_UPDATE_BEAUTY_PARAMS);
-			mHandler.sendMessage(message1);
-		}  else {
-			mHandler.sendEmptyMessage(ImageActivity.MSG_NEED_RECOVERUI);
-		}
-	}
+//	public void updateBeautyParamsUI() {
+//		int beautyOverlapCount = mSTMobileEffectNative.getOverlappedBeautyCount();
+//		Log.d(TAG, "updateBeautyParamsUI: beautyOverlapCount:" + beautyOverlapCount);
+//		mLastBeautyOverlapCount = beautyOverlapCount;
+//		if(beautyOverlapCount > 0){
+//			STEffectBeautyInfo[] beautyInfos = mSTMobileEffectNative.getOverlappedBeauty(beautyOverlapCount);
+//			Log.d(TAG, "run: " + Arrays.toString(beautyInfos));
+//			Log.d(TAG, "size: " +beautyInfos.length);
+//			setBeautyParamsFromPackage(beautyInfos);
+//
+//			Message message1 = mHandler.obtainMessage(ImageActivity.MSG_NEED_UPDATE_BEAUTY_PARAMS);
+//			mHandler.sendMessage(message1);
+//		}  else {
+//			mHandler.sendEmptyMessage(ImageActivity.MSG_NEED_RECOVERUI);
+//		}
+//	}
 
 	protected void initFaceAttribute() {
 		int result = mSTFaceAttributeNative.createInstance(FileUtils.getFaceAttributeModelPath(mContext));
@@ -508,10 +508,10 @@ public class ImageDisplay extends BaseDisplay implements Renderer{
 				int packageId = mSTMobileEffectNative.addPackage(sticker);
 				currentStickerMap.put(packageId, sticker);
 
-				Message messageReplace = mHandler.obtainMessage(ImageActivity.MSG_NEED_REPLACE_STICKER_MAP);
-				messageReplace.arg1 = index;
-				messageReplace.arg2 = packageId;
-				mHandler.sendMessage(messageReplace);
+//				Message messageReplace = mHandler.obtainMessage(ImageActivity.MSG_NEED_REPLACE_STICKER_MAP);
+//				messageReplace.arg1 = index;
+//				messageReplace.arg2 = packageId;
+//				mHandler.sendMessage(messageReplace);
 			}
 
 			mCurrentStickerMaps.clear();
@@ -785,9 +785,9 @@ public class ImageDisplay extends BaseDisplay implements Renderer{
 
 //		mProcessedImage = STUtils.getBitmapFromRGBA(mTmpBuffer.array(),mImageWidth,mImageHeight);
 
-		Message msg = Message.obtain(mHandler);
-		msg.what = ImageActivity.MSG_SAVING_IMG;
-		msg.sendToTarget();
+//		Message msg = Message.obtain(mHandler);
+//		msg.what = ImageActivity.MSG_SAVING_IMG;
+//		msg.sendToTarget();
 	}
 
 	public Bitmap getBitmap(){
