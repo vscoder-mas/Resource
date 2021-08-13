@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
@@ -20,9 +21,12 @@ import android.widget.Toast;
 //import com.sensetime.sensearsourcemanager.SenseArMaterialService;
 //import com.sensetime.sensearsourcemanager.SenseArServerType;
 
+import com.rongcloud.st.beauty.utils.STFileUtils;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import sensetime.senseme.com.effects.activity.CameraActivity;
 import sensetime.senseme.com.effects.utils.Constants;
@@ -119,6 +123,10 @@ public class WelcomeActivity extends Activity {
     protected void onResume() {
         super.onResume();
         mIsPaused = false;
+        List<String> list = STFileUtils.copyFilterModelFiles(this, "filter_portrait");
+        for (String str : list) {
+            Log.d(TAG, "- onResume: str:" + str);
+        }
     }
 
     @Override

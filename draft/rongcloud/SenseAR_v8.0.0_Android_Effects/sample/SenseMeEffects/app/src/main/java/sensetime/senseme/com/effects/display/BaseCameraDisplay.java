@@ -57,7 +57,6 @@ import sensetime.senseme.com.effects.utils.Accelerometer;
 import sensetime.senseme.com.effects.utils.Constants;
 import sensetime.senseme.com.effects.utils.EffectInfoDataHelper;
 import sensetime.senseme.com.effects.utils.FileUtils;
-import sensetime.senseme.com.effects.utils.LogUtils;
 import sensetime.senseme.com.effects.display.glutils.OpenGLUtils;
 import sensetime.senseme.com.effects.display.glutils.TextureRotationUtil;
 import sensetime.senseme.com.effects.display.glutils.GlUtil;
@@ -211,18 +210,17 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
 
         //初始化非OpengGL相关的句柄，包括人脸检测及人脸属性
         initHumanAction();
-        initCatFace();
-        initObjectTrack();
+//        initCatFace();
+//        initObjectTrack();
 
         //因为人脸模型加载较慢，建议异步调用
         if (DEBUG) {
-            initFaceAttribute();
+//            initFaceAttribute();
         }
 
-        initHandlerManager();
-
+//        initHandlerManager();
         setDefaultParams();
-        setDefaultMakeup();
+//        setDefaultMakeup();
         setDefaultFilter();
         updateHumanActionDetectConfig();
     }
@@ -351,7 +349,7 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
     protected void addSubModel(final String modelName) {
         synchronized (mHumanActionHandleLock) {
             int result = mSTHumanActionNative.addSubModelFromAssetFile(modelName, mContext.getAssets());
-            LogUtils.i(TAG, "add sub model result: %d", result);
+            Log.i(TAG, String.format("add sub model result: %d", result));
 
             if (result == 0) {
                 if (modelName.equals(FileUtils.MODEL_NAME_BODY_FOURTEEN)) {
@@ -374,7 +372,7 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
     protected void removeSubModel(final int config) {
         synchronized (mHumanActionHandleLock) {
             int result = mSTHumanActionNative.removeSubModelByConfig(config);
-            LogUtils.i(TAG, "remove sub model result: %d", result);
+            Log.i(TAG, String.format("remove sub model result: %d", result));
 
             if (config == STMobileHumanActionNative.ST_MOBILE_ENABLE_BODY_KEYPOINTS) {
                 mDetectConfig &= ~STMobileHumanActionNative.ST_MOBILE_BODY_KEYPOINTS;
@@ -453,7 +451,7 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
      */
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        LogUtils.i(TAG, "onSurfaceCreated");
+        Log.i(TAG, "onSurfaceCreated");
         //recoverParams();
         if (mIsPaused == true) {
             return;
@@ -505,7 +503,7 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
 
     protected void initFaceAttribute() {
         int result = mSTFaceAttributeNative.createInstanceFromAssetFile(FileUtils.MODEL_NAME_FACE_ATTRIBUTE, mContext.getAssets());
-        LogUtils.i(TAG, "the result for createInstance for faceAttribute is %d", result);
+        Log.i(TAG, String.format("the result for createInstance for faceAttribute is %d", result));
     }
 
     protected void initHumanAction() {
@@ -520,14 +518,15 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
 
                     //从asset资源文件夹读取model到内存，再使用底层st_mobile_human_action_create_from_buffer接口创建handle
                     int result = mSTHumanActionNative.createInstanceFromAssetFile(FileUtils.getActionModelName(), mHumanActionCreateConfig, mContext.getAssets());
-                    LogUtils.i(TAG, "the result for createInstance for human_action is %d", result);
-                    Log.e(TAG, "load model name: " + FileUtils.getActionModelName() + " cost time: " + (System.currentTimeMillis() - startLoadHumanActionModel));
+                    Log.i(TAG, String.format("the result for createInstance for human_action is %d", result));
+                    Log.e(TAG, "load model name: " + FileUtils.getActionModelName() + " cost time: " +
+                            (System.currentTimeMillis() - startLoadHumanActionModel));
 
                     if (result == 0) {
                         result = mSTHumanActionNative.addSubModelFromAssetFile(FileUtils.MODEL_NAME_HAND, mContext.getAssets());
-                        LogUtils.i(TAG, "add hand model result: %d", result);
+                        Log.i(TAG, String.format("add hand model result: %d", result));
                         result = mSTHumanActionNative.addSubModelFromAssetFile(FileUtils.MODEL_NAME_SEGMENT, mContext.getAssets());
-                        LogUtils.i(TAG, "add figure segment model result: %d", result);
+                        Log.i(TAG, String.format("add figure segment model result: %d", result));
 
                         mIsCreateHumanActionHandleSucceeded = true;
                         mSTHumanActionNative.setParam(STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_BACKGROUND_BLUR_STRENGTH, 0.35f);
@@ -535,28 +534,28 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
 
                         //240
                         result = mSTHumanActionNative.addSubModelFromAssetFile(FileUtils.MODEL_NAME_FACE_EXTRA, mContext.getAssets());
-                        LogUtils.i(TAG, "add face extra model result: %d", result);
+                        Log.i(TAG, String.format("add face extra model result: %d", result));
 
                         //eye
                         result = mSTHumanActionNative.addSubModelFromAssetFile(FileUtils.MODEL_NAME_EYEBALL_CONTOUR, mContext.getAssets());
-                        LogUtils.i(TAG, "add eyeball contour model result: %d", result);
+                        Log.i(TAG, String.format("add eyeball contour model result: %d", result));
 
                         result = mSTHumanActionNative.addSubModelFromAssetFile(FileUtils.MODEL_NAME_HAIR, mContext.getAssets());
-                        LogUtils.i(TAG, "add hair model result: %d", result);
+                        Log.i(TAG, String.format("add hair model result: %d", result));
 
                         result = mSTHumanActionNative.addSubModelFromAssetFile(FileUtils.MODEL_NAME_LIPS_PARSING, mContext.getAssets());
-                        LogUtils.i(TAG, "add lips parsing model result: %d", result);
+                        Log.i(TAG, String.format("add lips parsing model result: %d", result));
 
                         result = mSTHumanActionNative.addSubModelFromAssetFile(FileUtils.HEAD_SEGMENT_MODEL_NAME, mContext.getAssets());
-                        LogUtils.i(TAG, "add head segment model result: %d", result);
+                        Log.i(TAG, String.format("add head segment model result: %d", result));
 
                         //for test avatar
                         if (mNeedAvatar) {
                             int ret = mSTHumanActionNative.addSubModelFromAssetFile(FileUtils.MODEL_NAME_AVATAR_HELP, mContext.getAssets());
-                            LogUtils.i(TAG, "add avatar help model result: %d", ret);
+                            Log.i(TAG, String.format("add avatar help model result: %d", ret));
 
 //                            ret = mSTHumanActionNative.addSubModelFromAssetFile(FileUtils.MODEL_NAME_TONGUE, mContext.getAssets());
-//                            LogUtils.i(TAG,"add tongue model result: %d", ret );
+//                            Log.i(TAG,"add tongue model result: %d", ret );
                         }
                     }
                 }
@@ -566,12 +565,12 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
 
     protected void initCatFace() {
         int result = mStAnimalNative.createInstanceFromAssetFile(FileUtils.MODEL_NAME_CATFACE_CORE, STCommon.ST_MOBILE_TRACKING_MULTI_THREAD, mContext.getAssets());
-        LogUtils.i(TAG, "create animal handle result: %d", result);
+        Log.i(TAG, String.format("create animal handle result: %d", result));
     }
 
     protected void setDefaultParams() {
         int result = mSTMobileEffectNative.createInstance(mContext, STMobileEffectNative.EFFECT_CONFIG_NONE);
-        LogUtils.i(TAG, "the result is for initEffect:" + result);
+        Log.i(TAG, String.format("the result is for initEffect:" + result));
 
         mBeautifyParamsTypeBase = EffectInfoDataHelper.getInstance().getBaseParams();
         mBeautifyParamsTypeMicro = EffectInfoDataHelper.getInstance().getMicroParams();
@@ -604,6 +603,7 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
             return;
         }
 
+        //mNeedObject=false
         if (mNeedObject) {
             if (mNeedSetObjectTarget) {
                 long startTimeSetTarget = System.currentTimeMillis();
@@ -612,7 +612,7 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
                 STRect inputRect = new STRect(mTargetRect.left, mTargetRect.top, mTargetRect.right, mTargetRect.bottom);
 
                 mSTMobileObjectTrackNative.setTarget(mImageData, STCommon.ST_PIX_FMT_NV21, mImageHeight, mImageWidth, inputRect);
-                LogUtils.i(TAG, "setTarget cost time: %d", System.currentTimeMillis() - startTimeSetTarget);
+                Log.i(TAG, String.format("setTarget cost time: %d", System.currentTimeMillis() - startTimeSetTarget));
                 mNeedSetObjectTarget = false;
                 mIsObjectTracking = true;
             }
@@ -623,7 +623,7 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
                 long startTimeObjectTrack = System.currentTimeMillis();
                 float[] score = new float[1];
                 STRect outputRect = mSTMobileObjectTrackNative.objectTrack(mImageData, STCommon.ST_PIX_FMT_NV21, mImageHeight, mImageWidth, score);
-                LogUtils.i(TAG, "objectTrack cost time: %d", System.currentTimeMillis() - startTimeObjectTrack);
+                Log.i(TAG, String.format("objectTrack cost time: %d", System.currentTimeMillis() - startTimeObjectTrack));
                 mObjectCost = System.currentTimeMillis() - startTimeObjectTrack;
 
                 if (outputRect != null && score != null && score.length > 0) {
@@ -671,7 +671,7 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
                 STFaceAttribute[] arrayFaceAttribute = new STFaceAttribute[arrayFaces.length];
                 long attributeCostTime = System.currentTimeMillis();
                 int result = mSTFaceAttributeNative.detect(data, STCommon.ST_PIX_FMT_NV21, mImageHeight, mImageWidth, arrayFaces, arrayFaceAttribute);
-                LogUtils.i(TAG, "attribute cost time: %d", System.currentTimeMillis() - attributeCostTime);
+                Log.i(TAG, String.format("attribute cost time: %d", System.currentTimeMillis() - attributeCostTime));
                 mFaceAttributeCost = System.currentTimeMillis() - attributeCostTime;
                 if (result == 0) {
                     if (arrayFaceAttribute[0].getAttributeCount() > 0) {
@@ -693,7 +693,7 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
         if (mNeedAnimalDetect) {
             long catDetectStartTime = System.currentTimeMillis();
             STAnimalFace[] animalFaces = mStAnimalNative.animalDetect(imageData, format, orientation, width, height);
-            LogUtils.i(TAG, "cat face detect cost time: %d", System.currentTimeMillis() - catDetectStartTime);
+            Log.i(TAG, String.format("cat face detect cost time: %d", System.currentTimeMillis() - catDetectStartTime));
 
             if (animalFaces != null && animalFaces.length > 0) {
                 animalFaces = processAnimalFaceResult(animalFaces, mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT, mCameraProxy.getOrientation());
@@ -734,7 +734,7 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
      */
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        LogUtils.i(TAG, "onSurfaceChanged");
+        Log.i(TAG, "onSurfaceChanged");
         if (mIsPaused == true) {
             return;
         }
@@ -773,8 +773,8 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
                 System.arraycopy(data, 0, mImageData, 0, data.length);
             }
 
-            mProcessImageHandler.removeMessages(MESSAGE_PROCESS_IMAGE);
-            mProcessImageHandler.sendEmptyMessage(MESSAGE_PROCESS_IMAGE);
+//            mProcessImageHandler.removeMessages(MESSAGE_PROCESS_IMAGE);
+//            mProcessImageHandler.sendEmptyMessage(MESSAGE_PROCESS_IMAGE);
 
             mGlSurfaceView.requestRender();
             camera.addCallbackBuffer(data);
@@ -797,7 +797,7 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
             return;
         }
 
-        LogUtils.i(TAG, "onDrawFrame");
+        Log.i(TAG, "onDrawFrame");
 
         if (mBeautifyTextureId == null) {
             mBeautifyTextureId = new int[1];
@@ -830,7 +830,7 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
 
         long preProcessCostTime = System.currentTimeMillis();
         int textureId = mGLRender.preProcess(mTextureId, null);
-        LogUtils.i(TAG, "preprocess cost time: %d", System.currentTimeMillis() - preProcessCostTime);
+        Log.i(TAG, String.format("preprocess cost time: %d", System.currentTimeMillis() - preProcessCostTime));
 
         int result = -1;
         if (!mShowOriginal) {
@@ -855,7 +855,7 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
                 long startHumanAction = System.currentTimeMillis();
                 STHumanAction humanAction = mSTHumanActionNative.humanActionDetect(mNv21ImageData, STCommon.ST_PIX_FMT_NV21,
                         mDetectConfig, getHumanActionOrientation(), mImageHeight, mImageWidth);
-                LogUtils.i(TAG, "human action cost time: %d", System.currentTimeMillis() - startHumanAction);
+                Log.i(TAG, String.format("human action cost time: %d", System.currentTimeMillis() - startHumanAction));
 
                 if (mNeedAnimalDetect) {
                     animalDetect(mNv21ImageData, STCommon.ST_PIX_FMT_NV21, getHumanActionOrientation(), mImageHeight, mImageWidth, 0);
@@ -885,11 +885,12 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
 
                 int event = mCustomEvent;
                 STEffectCustomParam customParam;
-                if (mSensorEvent != null && mSensorEvent.values != null && mSensorEvent.values.length > 0) {
-                    customParam = new STEffectCustomParam(new STQuaternion(mSensorEvent.values), mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT, event);
-                } else {
-                    customParam = new STEffectCustomParam(new STQuaternion(0f, 0f, 0f, 1f), mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT, event);
-                }
+//                if (mSensorEvent != null && mSensorEvent.values != null && mSensorEvent.values.length > 0) {
+//                    customParam = new STEffectCustomParam(new STQuaternion(mSensorEvent.values), mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT, event);
+//                } else {
+//                    customParam = new STEffectCustomParam(new STQuaternion(0f, 0f, 0f, 1f), mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT, event);
+//                }
+                customParam = new STEffectCustomParam(new STQuaternion(0f, 0f, 0f, 1f), mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT, event);
 
                 STEffectRenderInParam sTEffectRenderInParam = new STEffectRenderInParam(mSTHumanAction[0], mAnimalFaceInfo[0], renderOrientation, STRotateType.ST_CLOCKWISE_ROTATE_0, false, customParam, stEffectTexture, null);
                 STEffectRenderOutParam stEffectRenderOutParam = new STEffectRenderOutParam(stEffectTextureOut, null, mSTHumanAction[0]);
@@ -905,7 +906,8 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
             }
 
 
-            LogUtils.i(TAG, "render cost time total: %d", System.currentTimeMillis() - mStartTime + mRotateCost + mObjectCost + mFaceAttributeCost / 20);
+            Log.i(TAG, String.format("render cost time total: %d",
+                    System.currentTimeMillis() - mStartTime + mRotateCost + mObjectCost + mFaceAttributeCost / 20));
         }
 
 
@@ -930,8 +932,8 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
             }
         }
 
-        LogUtils.i(TAG, "frame cost time total: %d", System.currentTimeMillis() - mStartTime);
-        LogUtils.i(TAG, "render fps: %f", mFps);
+        Log.i(TAG, String.format("frame cost time total: %d", System.currentTimeMillis() - mStartTime));
+        Log.i(TAG, String.format("render fps: %f", mFps));
 
         GLES20.glViewport(0, 0, mSurfaceWidth, mSurfaceHeight);
         mGLRender.onDrawFrame(textureId);
@@ -1102,7 +1104,7 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
     }
 
     public void onResume() {
-        LogUtils.i(TAG, "onResume");
+        Log.i(TAG, "onResume");
 
         if (mCameraProxy.getCamera() == null) {
             if (mCameraProxy.getNumberOfCameras() == 1) {
@@ -1124,12 +1126,12 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
     }
 
     public void onPause() {
-        LogUtils.i(TAG, "onPause");
+        Log.i(TAG, "onPause");
         mSetPreViewSizeSucceed = false;
         mIsPaused = true;
         mImageData = null;
         mCameraProxy.releaseCamera();
-        LogUtils.d(TAG, "Release camera");
+        Log.d(TAG, "Release camera");
 
         mGlSurfaceView.queueEvent(new Runnable() {
             @Override
@@ -1174,7 +1176,7 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
      * 释放纹理资源
      */
     protected void deleteTextures() {
-        LogUtils.i(TAG, "delete textures");
+        Log.i(TAG, "delete textures");
         deleteCameraPreviewTexture();
         deleteInternalTextures();
     }
@@ -1296,7 +1298,7 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
                 mCameraChanging = false;
                 mIsChangingPreviewSize = false;
                 //mGlSurfaceView.requestRender();
-                LogUtils.d(TAG, "exit  change Preview size queue event");
+                Log.d(TAG, "exit  change Preview size queue event");
             }
         });
     }

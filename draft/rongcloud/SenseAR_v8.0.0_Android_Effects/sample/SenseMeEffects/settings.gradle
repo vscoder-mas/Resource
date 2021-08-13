@@ -1,1 +1,4 @@
-include ':app', ':STMobileJNI'
+//include ':app', ':STMobileJNI'
+include ':app'
+include ':STFaceBeauty'
+rootProject.name = "SenseMeEffects"

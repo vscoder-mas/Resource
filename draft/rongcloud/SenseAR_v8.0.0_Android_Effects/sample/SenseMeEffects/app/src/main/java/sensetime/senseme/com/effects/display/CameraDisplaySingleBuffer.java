@@ -2,7 +2,6 @@ package sensetime.senseme.com.effects.display;
 
 import android.content.Context;
 import android.hardware.Camera;
-import android.opengl.EGL14;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
@@ -67,16 +66,15 @@ public class CameraDisplaySingleBuffer extends BaseCameraDisplay {
     public void onDrawFrame(GL10 gl) {
         // during switch camera
         if (mCameraChanging || mIsChangingPreviewSize || mIsPaused || mSTMobileColorConvertNative == null) {
-            return ;
+            return;
         }
 
         if (mCameraProxy.getCamera() == null) {
             return;
         }
 
-        LogUtils.i(TAG, "onDrawFrame");
-
-        if(mImageData == null){
+        LogUtils.i(TAG, "- onDrawFrame begin");
+        if (mImageData == null) {
             return;
         }
 
@@ -84,7 +82,7 @@ public class CameraDisplaySingleBuffer extends BaseCameraDisplay {
             mNv21ImageData = new byte[mImageHeight * mImageWidth * 3/2];
         }
 
-        synchronized (mImageDataLock){
+        synchronized (mImageDataLock) {
             try {
                 System.arraycopy(mImageData, 0, mNv21ImageData, 0, mImageData.length);
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -98,28 +96,29 @@ public class CameraDisplaySingleBuffer extends BaseCameraDisplay {
             GlUtil.initEffectTexture(mImageWidth, mImageHeight, mBeautifyTextureId, GLES20.GL_TEXTURE_2D);
         }
 
-        if (mMakeupTextureId == null) {
-            mMakeupTextureId = new int[1];
-            GlUtil.initEffectTexture(mImageWidth, mImageHeight, mMakeupTextureId, GLES20.GL_TEXTURE_2D);
-        }
-
-        if (mTextureOutId == null) {
-            mTextureOutId = new int[1];
-            GlUtil.initEffectTexture(mImageWidth, mImageHeight, mTextureOutId, GLES20.GL_TEXTURE_2D);
-        }
+//        if (mMakeupTextureId == null) {
+//            mMakeupTextureId = new int[1];
+//            GlUtil.initEffectTexture(mImageWidth, mImageHeight, mMakeupTextureId, GLES20.GL_TEXTURE_2D);
+//        }
+//
+//        if (mTextureOutId == null) {
+//            mTextureOutId = new int[1];
+//            GlUtil.initEffectTexture(mImageWidth, mImageHeight, mTextureOutId, GLES20.GL_TEXTURE_2D);
+//        }
 
         if (mCameraInputTexture == null) {
             mCameraInputTexture = new int[2];
             GlUtil.initEffectTexture(mImageWidth, mImageHeight, mCameraInputTexture, GLES20.GL_TEXTURE_2D);
         }
 
-        if (mVideoEncoderTexture == null) {
-            mVideoEncoderTexture = new int[1];
-        }
+//        if (mVideoEncoderTexture == null) {
+//            mVideoEncoderTexture = new int[1];
+//        }
 
-        if(mShowOriginal){
+        Log.d(TAG, "- onDrawFrame: mShowOriginal:" + mShowOriginal);
+        if (mShowOriginal) {
             mCountDownLatch = new CountDownLatch(1);
-        }else {
+        } else {
             mCountDownLatch = new CountDownLatch(2);
         }
 
@@ -128,11 +127,13 @@ public class CameraDisplaySingleBuffer extends BaseCameraDisplay {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
         //避免计数器wait block
-        boolean isCreateHumanActionHandleSucceeded = mIsCreateHumanActionHandleSucceeded;
-        if(!mShowOriginal && isCreateHumanActionHandleSucceeded){
-            synchronized (mHumanActionLock){
+//        boolean isCreateHumanActionHandleSucceeded = mIsCreateHumanActionHandleSucceeded;
+//        if (!mShowOriginal && isCreateHumanActionHandleSucceeded) {
+        if (!mShowOriginal) {
+            synchronized (mHumanActionLock) {
                 mSTHumanActionNative.nativeHumanActionPtrCopy();
             }
+
             //检测线程
             mDetectThreadPool.submit(new Runnable() {
                 @Override
@@ -145,11 +146,13 @@ public class CameraDisplaySingleBuffer extends BaseCameraDisplay {
 
                         //nv21数据为横向，相对于预览方向需要旋转处理，前置摄像头还需要镜像
 //                        mSTHumanAction[1 - mCameraInputTextureIndex] = STHumanAction.humanActionRotateAndMirror(humanAction, mImageWidth, mImageHeight, mCameraID, mCameraProxy.getOrientation(), Accelerometer.getDirection());
-                        STHumanAction.nativeHumanActionRotateAndMirror(mSTHumanActionNative, mSTHumanActionNative.getNativeHumanActionResultPtr(), mImageWidth, mImageHeight, mCameraID, mCameraProxy.getOrientation(), Accelerometer.getDirection());
+                        STHumanAction.nativeHumanActionRotateAndMirror(mSTHumanActionNative,
+                                mSTHumanActionNative.getNativeHumanActionResultPtr(), mImageWidth, mImageHeight,
+                                mCameraID, mCameraProxy.getOrientation(), Accelerometer.getDirection());
 
-                        if(mNeedAnimalDetect){
-                            animalDetect(mNv21ImageData, STCommon.ST_PIX_FMT_NV21, getHumanActionOrientation(), mImageHeight, mImageWidth, 1 - mCameraInputTextureIndex);
-                        }
+//                        if(mNeedAnimalDetect){
+//                            animalDetect(mNv21ImageData, STCommon.ST_PIX_FMT_NV21, getHumanActionOrientation(), mImageHeight, mImageWidth, 1 - mCameraInputTextureIndex);
+//                        }
                     }
 
                     mCountDownLatch.countDown(); // 计数减1
@@ -157,13 +160,14 @@ public class CameraDisplaySingleBuffer extends BaseCameraDisplay {
             });
         }
 
-        if(mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT){
+        if (mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT) {
             mCameraOrientation = STRotateType.ST_CLOCKWISE_ROTATE_90;
             mCameraNeedMirror = true;
-        }else {
+        } else {
             mCameraOrientation = STRotateType.ST_CLOCKWISE_ROTATE_270;
             mCameraNeedMirror = false;
         }
+
         long preProcessCostTime = System.currentTimeMillis();
         //上传nv21 buffer到纹理
         int ret = mSTMobileColorConvertNative.nv21BufferToRgbaTexture(mImageHeight, mImageWidth, mCameraOrientation, mCameraNeedMirror, mNv21ImageData, mCameraInputTexture[mCameraInputTextureIndex]);
@@ -172,13 +176,15 @@ public class CameraDisplaySingleBuffer extends BaseCameraDisplay {
         //双缓冲策略，提升帧率
         mCameraInputTextureIndex = 1 - mCameraInputTextureIndex;
         int textureId = mCameraInputTexture[mCameraInputTextureIndex];
+        if (!GLES20.glIsTexture(textureId)) {
+            Log.e(TAG, "- onDrawFrame: !GLES20.glIsTexture(textureId)");
+            return;
+        }
 
-        if(!GLES20.glIsTexture(textureId))return;
-
-        if(!mShowOriginal){
+        if (!mShowOriginal) {
             //核心渲染接口
-            if(mSTMobileEffectNative != null){
-                if(mCurrentFilterStrength != mFilterStrength){
+            if (mSTMobileEffectNative != null) {
+                if (mCurrentFilterStrength != mFilterStrength) {
                     mCurrentFilterStrength = mFilterStrength;
                     mSTMobileEffectNative.setBeautyStrength(STEffectBeautyType.EFFECT_BEAUTY_FILTER, mCurrentFilterStrength);
                 }
@@ -191,58 +197,66 @@ public class CameraDisplaySingleBuffer extends BaseCameraDisplay {
                 int renderOrientation = getCurrentOrientation();
 
                 //用户自定义参数设置
-                int event = mCustomEvent;
-                STEffectCustomParam customParam;
-                if(mSensorEvent != null && mSensorEvent.values != null && mSensorEvent.values.length > 0){
-                    customParam = new STEffectCustomParam(new STQuaternion(mSensorEvent.values), mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT, event);
-                } else {
-                    customParam = new STEffectCustomParam(new STQuaternion(0f,0f,0f,1f), mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT, event);
-                }
+//                int event = mCustomEvent;
+//                STEffectCustomParam customParam;
+//                if (mSensorEvent != null && mSensorEvent.values != null && mSensorEvent.values.length > 0) {
+//                    customParam = new STEffectCustomParam(new STQuaternion(mSensorEvent.values), mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT, event);
+//                } else {
+//                    customParam = new STEffectCustomParam(new STQuaternion(0f, 0f, 0f, 1f), mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT, event);
+//                }
 
                 //渲染接口输入参数
-                STEffectRenderInParam sTEffectRenderInParam = new STEffectRenderInParam(mSTHumanActionNative.getNativeHumanActionPtrCopy(), mAnimalFaceInfo[mCameraInputTextureIndex], renderOrientation, renderOrientation, false, customParam, stEffectTexture, null);
+//                STEffectRenderInParam sTEffectRenderInParam = new STEffectRenderInParam(mSTHumanActionNative.getNativeHumanActionPtrCopy(),
+//                        mAnimalFaceInfo[mCameraInputTextureIndex], renderOrientation, renderOrientation, false,
+//                        customParam, stEffectTexture, null);
+
+                STEffectRenderInParam sTEffectRenderInParam = new STEffectRenderInParam(mSTHumanActionNative.getNativeHumanActionPtrCopy(),
+                        null, renderOrientation, renderOrientation, false,
+                        null, stEffectTexture, null);
                 //渲染接口输出参数
-                STEffectRenderOutParam stEffectRenderOutParam = new STEffectRenderOutParam(stEffectTextureOut, null, mSTHumanAction[mCameraInputTextureIndex]);
+//                STEffectRenderOutParam stEffectRenderOutParam = new STEffectRenderOutParam(stEffectTextureOut, null, mSTHumanAction[mCameraInputTextureIndex]);
+                STEffectRenderOutParam  stEffectRenderOutParam = new STEffectRenderOutParam(stEffectTextureOut, null, null);
                 long mStartRenderTime = System.currentTimeMillis();
                 mSTMobileEffectNative.render(sTEffectRenderInParam, stEffectRenderOutParam, false);
                 LogUtils.i(TAG, "render cost time total: %d", System.currentTimeMillis() - mStartRenderTime);
 
-                if(stEffectRenderOutParam != null && stEffectRenderOutParam.getTexture() != null){
+                if (stEffectRenderOutParam != null && stEffectRenderOutParam.getTexture() != null) {
                     textureId = stEffectRenderOutParam.getTexture().getId();
                 }
 
-                if(event == mCustomEvent){
-                    mCustomEvent = 0;
-                }
+//                if (event == mCustomEvent) {
+//                    mCustomEvent = 0;
+//                }
             }
         }
 
-        if(mNeedSave) {
-            savePicture(textureId);
-            mNeedSave = false;
-        }
+//        if (mNeedSave) {
+//            savePicture(textureId);
+//            mNeedSave = false;
+//        }
 
         mCountDownLatch.countDown(); // 计数减1
-        try{
-            if(!mShowOriginal && !mIsPaused && !mCameraChanging && isCreateHumanActionHandleSucceeded){
+        try {
+//            if (!mShowOriginal && !mIsPaused && !mCameraChanging && isCreateHumanActionHandleSucceeded) {
+            if (!mShowOriginal && !mIsPaused && !mCameraChanging) {
                 mCountDownLatch.await();
             }
-        }catch (Exception e){
-            Log.e(TAG, "onDrawFrame: "+ e.getMessage());
+        } catch (Exception e) {
+            Log.e(TAG, "onDrawFrame: " + e.getMessage());
         }
 
-        mFrameCost = (int)(System.currentTimeMillis() - mStartTime);
-
-        long timer  = System.currentTimeMillis();
+        mFrameCost = (int) (System.currentTimeMillis() - mStartTime);
+        long timer = System.currentTimeMillis();
         mCount++;
-        if(mIsFirstCount){
+
+        if (mIsFirstCount) {
             mCurrentTime = timer;
             mIsFirstCount = false;
-        }else{
-            int cost = (int)(timer - mCurrentTime);
-            if(cost >= 1000){
+        } else {
+            int cost = (int) (timer - mCurrentTime);
+            if (cost >= 1000) {
                 mCurrentTime = timer;
-                mFps = (((float)mCount *1000)/cost);
+                mFps = (((float) mCount * 1000) / cost);
                 mCount = 0;
             }
         }
@@ -253,20 +267,20 @@ public class CameraDisplaySingleBuffer extends BaseCameraDisplay {
         GLES20.glViewport(0, 0, mSurfaceWidth, mSurfaceHeight);
         mGLRender.onDrawFrame(textureId);
 
-        //video capturing
-        if(mVideoEncoder != null){
-            GLES20.glFinish();
-            mVideoEncoderTexture[0] = textureId;
-            synchronized (this) {
-                if (mVideoEncoder != null) {
-                    if(mNeedResetEglContext){
-                        mVideoEncoder.setEglContext(EGL14.eglGetCurrentContext(), mVideoEncoderTexture[0]);
-                        mNeedResetEglContext = false;
-                    }
-                    mVideoEncoder.frameAvailableSoon(mTextureEncodeMatrix);
-                }
-            }
-        }
+//        //video capturing
+//        if(mVideoEncoder != null){
+//            GLES20.glFinish();
+//            mVideoEncoderTexture[0] = textureId;
+//            synchronized (this) {
+//                if (mVideoEncoder != null) {
+//                    if(mNeedResetEglContext){
+//                        mVideoEncoder.setEglContext(EGL14.eglGetCurrentContext(), mVideoEncoderTexture[0]);
+//                        mNeedResetEglContext = false;
+//                    }
+//                    mVideoEncoder.frameAvailableSoon(mTextureEncodeMatrix);
+//                }
+//            }
+//        }
     }
 
     @Override
