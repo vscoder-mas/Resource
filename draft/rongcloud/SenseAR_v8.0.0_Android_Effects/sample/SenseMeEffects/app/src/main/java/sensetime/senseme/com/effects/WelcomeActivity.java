@@ -123,6 +123,7 @@ public class WelcomeActivity extends Activity {
     protected void onResume() {
         super.onResume();
         mIsPaused = false;
+        //todo:://加载filter_portrait人物滤镜资源
         List<String> list = STFileUtils.copyFilterModelFiles(this, "filter_portrait");
         for (String str : list) {
             Log.d(TAG, "- onResume: str:" + str);

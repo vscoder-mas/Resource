@@ -127,9 +127,8 @@ public class CameraDisplaySingleBuffer extends BaseCameraDisplay {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
         //避免计数器wait block
-//        boolean isCreateHumanActionHandleSucceeded = mIsCreateHumanActionHandleSucceeded;
-//        if (!mShowOriginal && isCreateHumanActionHandleSucceeded) {
-        if (!mShowOriginal) {
+        boolean isCreateHumanActionHandleSucceeded = mIsCreateHumanActionHandleSucceeded;
+        if (!mShowOriginal && isCreateHumanActionHandleSucceeded) {
             synchronized (mHumanActionLock) {
                 mSTHumanActionNative.nativeHumanActionPtrCopy();
             }
@@ -237,8 +236,7 @@ public class CameraDisplaySingleBuffer extends BaseCameraDisplay {
 
         mCountDownLatch.countDown(); // 计数减1
         try {
-//            if (!mShowOriginal && !mIsPaused && !mCameraChanging && isCreateHumanActionHandleSucceeded) {
-            if (!mShowOriginal && !mIsPaused && !mCameraChanging) {
+            if (!mShowOriginal && !mIsPaused && !mCameraChanging && isCreateHumanActionHandleSucceeded) {
                 mCountDownLatch.await();
             }
         } catch (Exception e) {

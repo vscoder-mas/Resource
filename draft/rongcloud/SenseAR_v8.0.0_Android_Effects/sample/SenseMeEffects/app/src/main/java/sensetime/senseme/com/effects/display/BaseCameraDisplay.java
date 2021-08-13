@@ -221,7 +221,7 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
 //        initHandlerManager();
         setDefaultParams();
 //        setDefaultMakeup();
-        setDefaultFilter();
+//        setDefaultFilter();
         updateHumanActionDetectConfig();
     }
 
@@ -550,13 +550,13 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
                         Log.i(TAG, String.format("add head segment model result: %d", result));
 
                         //for test avatar
-                        if (mNeedAvatar) {
-                            int ret = mSTHumanActionNative.addSubModelFromAssetFile(FileUtils.MODEL_NAME_AVATAR_HELP, mContext.getAssets());
-                            Log.i(TAG, String.format("add avatar help model result: %d", ret));
-
-//                            ret = mSTHumanActionNative.addSubModelFromAssetFile(FileUtils.MODEL_NAME_TONGUE, mContext.getAssets());
-//                            Log.i(TAG,"add tongue model result: %d", ret );
-                        }
+//                        if (mNeedAvatar) {
+//                            int ret = mSTHumanActionNative.addSubModelFromAssetFile(FileUtils.MODEL_NAME_AVATAR_HELP, mContext.getAssets());
+//                            Log.i(TAG, String.format("add avatar help model result: %d", ret));
+//
+////                            ret = mSTHumanActionNative.addSubModelFromAssetFile(FileUtils.MODEL_NAME_TONGUE, mContext.getAssets());
+////                            Log.i(TAG,"add tongue model result: %d", ret );
+//                        }
                     }
                 }
             }
@@ -572,26 +572,26 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
         int result = mSTMobileEffectNative.createInstance(mContext, STMobileEffectNative.EFFECT_CONFIG_NONE);
         Log.i(TAG, String.format("the result is for initEffect:" + result));
 
-        mBeautifyParamsTypeBase = EffectInfoDataHelper.getInstance().getBaseParams();
-        mBeautifyParamsTypeMicro = EffectInfoDataHelper.getInstance().getMicroParams();
-        mBeautifyParamsTypeAdjust = EffectInfoDataHelper.getInstance().getAdjustParams();
-        mBeautifyParamsTypeProfessional = EffectInfoDataHelper.getInstance().getProfessionalParams();
-
-        mSTMobileEffectNative.setBeautyMode(103, 2);
-
-        setBeautifyBaseParam(mBeautifyParamsTypeBase);
-
-        for (int i = 0; i < mBeautifyParamsTypeProfessional.length; i++) {
-            setBeautyParam(STEffectBeautyType.EFFECT_BEAUTY_RESHAPE_SHRINK_FACE + i, (mBeautifyParamsTypeProfessional[i]));
-        }
-
-        for (int i = 0; i < mBeautifyParamsTypeMicro.length; i++) {
-            setBeautyParam(STEffectBeautyType.EFFECT_BEAUTY_PLASTIC_THINNER_HEAD + i, (mBeautifyParamsTypeMicro[i]));
-        }
-
-        for (int i = 0; i < mBeautifyParamsTypeAdjust.length; i++) {
-            setBeautyParam(STEffectBeautyType.EFFECT_BEAUTY_TONE_CONTRAST + i, (mBeautifyParamsTypeAdjust[i]));
-        }
+//        mBeautifyParamsTypeBase = EffectInfoDataHelper.getInstance().getBaseParams();
+//        mBeautifyParamsTypeMicro = EffectInfoDataHelper.getInstance().getMicroParams();
+//        mBeautifyParamsTypeAdjust = EffectInfoDataHelper.getInstance().getAdjustParams();
+//        mBeautifyParamsTypeProfessional = EffectInfoDataHelper.getInstance().getProfessionalParams();
+//
+//        mSTMobileEffectNative.setBeautyMode(103, 2);
+//
+//        setBeautifyBaseParam(mBeautifyParamsTypeBase);
+//
+//        for (int i = 0; i < mBeautifyParamsTypeProfessional.length; i++) {
+//            setBeautyParam(STEffectBeautyType.EFFECT_BEAUTY_RESHAPE_SHRINK_FACE + i, (mBeautifyParamsTypeProfessional[i]));
+//        }
+//
+//        for (int i = 0; i < mBeautifyParamsTypeMicro.length; i++) {
+//            setBeautyParam(STEffectBeautyType.EFFECT_BEAUTY_PLASTIC_THINNER_HEAD + i, (mBeautifyParamsTypeMicro[i]));
+//        }
+//
+//        for (int i = 0; i < mBeautifyParamsTypeAdjust.length; i++) {
+//            setBeautyParam(STEffectBeautyType.EFFECT_BEAUTY_TONE_CONTRAST + i, (mBeautifyParamsTypeAdjust[i]));
+//        }
     }
 
     protected void initObjectTrack() {
@@ -789,169 +789,169 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
     @Override
     public void onDrawFrame(GL10 gl) {
         // during switch camera
-        if (mCameraChanging) {
-            return;
-        }
-
-        if (mCameraProxy.getCamera() == null) {
-            return;
-        }
-
-        Log.i(TAG, "onDrawFrame");
-
-        if (mBeautifyTextureId == null) {
-            mBeautifyTextureId = new int[1];
-            GlUtil.initEffectTexture(mImageWidth, mImageHeight, mBeautifyTextureId, GLES20.GL_TEXTURE_2D);
-        }
-
-        if (mMakeupTextureId == null) {
-            mMakeupTextureId = new int[1];
-            GlUtil.initEffectTexture(mImageWidth, mImageHeight, mMakeupTextureId, GLES20.GL_TEXTURE_2D);
-        }
-
-        if (mTextureOutId == null) {
-            mTextureOutId = new int[1];
-            GlUtil.initEffectTexture(mImageWidth, mImageHeight, mTextureOutId, GLES20.GL_TEXTURE_2D);
-        }
-
-        if (mVideoEncoderTexture == null) {
-            mVideoEncoderTexture = new int[1];
-        }
-
-        if (mSurfaceTexture != null && !mIsPaused) {
-            mSurfaceTexture.updateTexImage();
-        } else {
-            return;
-        }
-
-        mStartTime = System.currentTimeMillis();
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-
-        long preProcessCostTime = System.currentTimeMillis();
-        int textureId = mGLRender.preProcess(mTextureId, null);
-        Log.i(TAG, String.format("preprocess cost time: %d", System.currentTimeMillis() - preProcessCostTime));
-
-        int result = -1;
-        if (!mShowOriginal) {
-            if (mIsCreateHumanActionHandleSucceeded) {
-                if (mCameraChanging || mImageData == null || mImageData.length != mImageHeight * mImageWidth * 3 / 2) {
-                    return;
-                }
-                synchronized (mImageDataLock) {
-                    if (mNv21ImageData == null || mNv21ImageData.length != mImageHeight * mImageWidth * 3 / 2) {
-                        mNv21ImageData = new byte[mImageWidth * mImageHeight * 3 / 2];
-                    }
-
-                    if (mImageData != null && mNv21ImageData.length >= mImageData.length) {
-                        System.arraycopy(mImageData, 0, mNv21ImageData, 0, mImageData.length);
-                    }
-                }
-
-                if (mImageHeight * mImageWidth * 3 / 2 > mNv21ImageData.length) {
-                    return;
-                }
-
-                long startHumanAction = System.currentTimeMillis();
-                STHumanAction humanAction = mSTHumanActionNative.humanActionDetect(mNv21ImageData, STCommon.ST_PIX_FMT_NV21,
-                        mDetectConfig, getHumanActionOrientation(), mImageHeight, mImageWidth);
-                Log.i(TAG, String.format("human action cost time: %d", System.currentTimeMillis() - startHumanAction));
-
-                if (mNeedAnimalDetect) {
-                    animalDetect(mNv21ImageData, STCommon.ST_PIX_FMT_NV21, getHumanActionOrientation(), mImageHeight, mImageWidth, 0);
-                }
-
-                /**
-                 * HumanAction rotate && mirror:双输入场景中，buffer为相机原始数据，而texture已根据预览旋转和镜像处理，所以buffer和texture方向不一致，
-                 * 根据buffer计算出的HumanAction不能直接使用，需要根据摄像头ID和摄像头方向处理后使用
-                 */
-                mSTHumanAction[0] = STHumanAction.humanActionRotateAndMirror(humanAction, mImageWidth, mImageHeight, mCameraID, mCameraProxy.getOrientation(), Accelerometer.getDirection());
-            }
-
-            if (mSTMobileEffectNative != null) {
-                if (mCurrentFilterStyle != mFilterStyle) {
-                    mCurrentFilterStyle = mFilterStyle;
-                    mSTMobileEffectNative.setBeauty(STEffectBeautyType.EFFECT_BEAUTY_FILTER, mCurrentFilterStyle);
-                }
-                if (mCurrentFilterStrength != mFilterStrength) {
-                    mCurrentFilterStrength = mFilterStrength;
-                    mSTMobileEffectNative.setBeautyStrength(STEffectBeautyType.EFFECT_BEAUTY_FILTER, mCurrentFilterStrength);
-                }
-
-                STEffectTexture stEffectTexture = new STEffectTexture(textureId, mImageWidth, mImageHeight, 0);
-                STEffectTexture stEffectTextureOut = new STEffectTexture(mBeautifyTextureId[0], mImageWidth, mImageHeight, 0);
-
-                int renderOrientation = getCurrentOrientation();
-
-                int event = mCustomEvent;
-                STEffectCustomParam customParam;
-//                if (mSensorEvent != null && mSensorEvent.values != null && mSensorEvent.values.length > 0) {
-//                    customParam = new STEffectCustomParam(new STQuaternion(mSensorEvent.values), mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT, event);
-//                } else {
-//                    customParam = new STEffectCustomParam(new STQuaternion(0f, 0f, 0f, 1f), mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT, event);
+//        if (mCameraChanging) {
+//            return;
+//        }
+//
+//        if (mCameraProxy.getCamera() == null) {
+//            return;
+//        }
+//
+//        Log.i(TAG, "onDrawFrame");
+//
+//        if (mBeautifyTextureId == null) {
+//            mBeautifyTextureId = new int[1];
+//            GlUtil.initEffectTexture(mImageWidth, mImageHeight, mBeautifyTextureId, GLES20.GL_TEXTURE_2D);
+//        }
+//
+//        if (mMakeupTextureId == null) {
+//            mMakeupTextureId = new int[1];
+//            GlUtil.initEffectTexture(mImageWidth, mImageHeight, mMakeupTextureId, GLES20.GL_TEXTURE_2D);
+//        }
+//
+//        if (mTextureOutId == null) {
+//            mTextureOutId = new int[1];
+//            GlUtil.initEffectTexture(mImageWidth, mImageHeight, mTextureOutId, GLES20.GL_TEXTURE_2D);
+//        }
+//
+//        if (mVideoEncoderTexture == null) {
+//            mVideoEncoderTexture = new int[1];
+//        }
+//
+//        if (mSurfaceTexture != null && !mIsPaused) {
+//            mSurfaceTexture.updateTexImage();
+//        } else {
+//            return;
+//        }
+//
+//        mStartTime = System.currentTimeMillis();
+//        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+//        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+//
+//        long preProcessCostTime = System.currentTimeMillis();
+//        int textureId = mGLRender.preProcess(mTextureId, null);
+//        Log.i(TAG, String.format("preprocess cost time: %d", System.currentTimeMillis() - preProcessCostTime));
+//
+//        int result = -1;
+//        if (!mShowOriginal) {
+//            if (mIsCreateHumanActionHandleSucceeded) {
+//                if (mCameraChanging || mImageData == null || mImageData.length != mImageHeight * mImageWidth * 3 / 2) {
+//                    return;
 //                }
-                customParam = new STEffectCustomParam(new STQuaternion(0f, 0f, 0f, 1f), mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT, event);
-
-                STEffectRenderInParam sTEffectRenderInParam = new STEffectRenderInParam(mSTHumanAction[0], mAnimalFaceInfo[0], renderOrientation, STRotateType.ST_CLOCKWISE_ROTATE_0, false, customParam, stEffectTexture, null);
-                STEffectRenderOutParam stEffectRenderOutParam = new STEffectRenderOutParam(stEffectTextureOut, null, mSTHumanAction[0]);
-                result = mSTMobileEffectNative.render(sTEffectRenderInParam, stEffectRenderOutParam, false);
-
-                if (stEffectRenderOutParam != null && stEffectRenderOutParam.getTexture() != null) {
-                    textureId = stEffectRenderOutParam.getTexture().getId();
-                }
-
-                if (event == mCustomEvent) {
-                    mCustomEvent = 0;
-                }
-            }
-
-
-            Log.i(TAG, String.format("render cost time total: %d",
-                    System.currentTimeMillis() - mStartTime + mRotateCost + mObjectCost + mFaceAttributeCost / 20));
-        }
-
-
-        if (mNeedSave) {
-            savePicture(textureId);
-            mNeedSave = false;
-        }
-
-        mFrameCost = (int) (System.currentTimeMillis() - mStartTime + mRotateCost + mObjectCost + mFaceAttributeCost / 20);
-
-        long timer = System.currentTimeMillis();
-        mCount++;
-        if (mIsFirstCount) {
-            mCurrentTime = timer;
-            mIsFirstCount = false;
-        } else {
-            int cost = (int) (timer - mCurrentTime);
-            if (cost >= 1000) {
-                mCurrentTime = timer;
-                mFps = (((float) mCount * 1000) / cost);
-                mCount = 0;
-            }
-        }
-
-        Log.i(TAG, String.format("frame cost time total: %d", System.currentTimeMillis() - mStartTime));
-        Log.i(TAG, String.format("render fps: %f", mFps));
-
-        GLES20.glViewport(0, 0, mSurfaceWidth, mSurfaceHeight);
-        mGLRender.onDrawFrame(textureId);
-
-        //video capturing
-        if (mVideoEncoder != null) {
-            GLES20.glFinish();
-            mVideoEncoderTexture[0] = textureId;
-            synchronized (this) {
-                if (mVideoEncoder != null) {
-                    if (mNeedResetEglContext) {
-                        mVideoEncoder.setEglContext(EGL14.eglGetCurrentContext(), mVideoEncoderTexture[0]);
-                        mNeedResetEglContext = false;
-                    }
-                    mVideoEncoder.frameAvailableSoon(mTextureEncodeMatrix);
-                }
-            }
-        }
+//                synchronized (mImageDataLock) {
+//                    if (mNv21ImageData == null || mNv21ImageData.length != mImageHeight * mImageWidth * 3 / 2) {
+//                        mNv21ImageData = new byte[mImageWidth * mImageHeight * 3 / 2];
+//                    }
+//
+//                    if (mImageData != null && mNv21ImageData.length >= mImageData.length) {
+//                        System.arraycopy(mImageData, 0, mNv21ImageData, 0, mImageData.length);
+//                    }
+//                }
+//
+//                if (mImageHeight * mImageWidth * 3 / 2 > mNv21ImageData.length) {
+//                    return;
+//                }
+//
+//                long startHumanAction = System.currentTimeMillis();
+//                STHumanAction humanAction = mSTHumanActionNative.humanActionDetect(mNv21ImageData, STCommon.ST_PIX_FMT_NV21,
+//                        mDetectConfig, getHumanActionOrientation(), mImageHeight, mImageWidth);
+//                Log.i(TAG, String.format("human action cost time: %d", System.currentTimeMillis() - startHumanAction));
+//
+//                if (mNeedAnimalDetect) {
+//                    animalDetect(mNv21ImageData, STCommon.ST_PIX_FMT_NV21, getHumanActionOrientation(), mImageHeight, mImageWidth, 0);
+//                }
+//
+//                /**
+//                 * HumanAction rotate && mirror:双输入场景中，buffer为相机原始数据，而texture已根据预览旋转和镜像处理，所以buffer和texture方向不一致，
+//                 * 根据buffer计算出的HumanAction不能直接使用，需要根据摄像头ID和摄像头方向处理后使用
+//                 */
+//                mSTHumanAction[0] = STHumanAction.humanActionRotateAndMirror(humanAction, mImageWidth, mImageHeight, mCameraID, mCameraProxy.getOrientation(), Accelerometer.getDirection());
+//            }
+//
+//            if (mSTMobileEffectNative != null) {
+//                if (mCurrentFilterStyle != mFilterStyle) {
+//                    mCurrentFilterStyle = mFilterStyle;
+//                    mSTMobileEffectNative.setBeauty(STEffectBeautyType.EFFECT_BEAUTY_FILTER, mCurrentFilterStyle);
+//                }
+//                if (mCurrentFilterStrength != mFilterStrength) {
+//                    mCurrentFilterStrength = mFilterStrength;
+//                    mSTMobileEffectNative.setBeautyStrength(STEffectBeautyType.EFFECT_BEAUTY_FILTER, mCurrentFilterStrength);
+//                }
+//
+//                STEffectTexture stEffectTexture = new STEffectTexture(textureId, mImageWidth, mImageHeight, 0);
+//                STEffectTexture stEffectTextureOut = new STEffectTexture(mBeautifyTextureId[0], mImageWidth, mImageHeight, 0);
+//
+//                int renderOrientation = getCurrentOrientation();
+//
+//                int event = mCustomEvent;
+//                STEffectCustomParam customParam;
+////                if (mSensorEvent != null && mSensorEvent.values != null && mSensorEvent.values.length > 0) {
+////                    customParam = new STEffectCustomParam(new STQuaternion(mSensorEvent.values), mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT, event);
+////                } else {
+////                    customParam = new STEffectCustomParam(new STQuaternion(0f, 0f, 0f, 1f), mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT, event);
+////                }
+//                customParam = new STEffectCustomParam(new STQuaternion(0f, 0f, 0f, 1f), mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT, event);
+//
+//                STEffectRenderInParam sTEffectRenderInParam = new STEffectRenderInParam(mSTHumanAction[0], mAnimalFaceInfo[0], renderOrientation, STRotateType.ST_CLOCKWISE_ROTATE_0, false, customParam, stEffectTexture, null);
+//                STEffectRenderOutParam stEffectRenderOutParam = new STEffectRenderOutParam(stEffectTextureOut, null, mSTHumanAction[0]);
+//                result = mSTMobileEffectNative.render(sTEffectRenderInParam, stEffectRenderOutParam, false);
+//
+//                if (stEffectRenderOutParam != null && stEffectRenderOutParam.getTexture() != null) {
+//                    textureId = stEffectRenderOutParam.getTexture().getId();
+//                }
+//
+//                if (event == mCustomEvent) {
+//                    mCustomEvent = 0;
+//                }
+//            }
+//
+//
+//            Log.i(TAG, String.format("render cost time total: %d",
+//                    System.currentTimeMillis() - mStartTime + mRotateCost + mObjectCost + mFaceAttributeCost / 20));
+//        }
+//
+//
+//        if (mNeedSave) {
+//            savePicture(textureId);
+//            mNeedSave = false;
+//        }
+//
+//        mFrameCost = (int) (System.currentTimeMillis() - mStartTime + mRotateCost + mObjectCost + mFaceAttributeCost / 20);
+//
+//        long timer = System.currentTimeMillis();
+//        mCount++;
+//        if (mIsFirstCount) {
+//            mCurrentTime = timer;
+//            mIsFirstCount = false;
+//        } else {
+//            int cost = (int) (timer - mCurrentTime);
+//            if (cost >= 1000) {
+//                mCurrentTime = timer;
+//                mFps = (((float) mCount * 1000) / cost);
+//                mCount = 0;
+//            }
+//        }
+//
+//        Log.i(TAG, String.format("frame cost time total: %d", System.currentTimeMillis() - mStartTime));
+//        Log.i(TAG, String.format("render fps: %f", mFps));
+//
+//        GLES20.glViewport(0, 0, mSurfaceWidth, mSurfaceHeight);
+//        mGLRender.onDrawFrame(textureId);
+//
+//        //video capturing
+//        if (mVideoEncoder != null) {
+//            GLES20.glFinish();
+//            mVideoEncoderTexture[0] = textureId;
+//            synchronized (this) {
+//                if (mVideoEncoder != null) {
+//                    if (mNeedResetEglContext) {
+//                        mVideoEncoder.setEglContext(EGL14.eglGetCurrentContext(), mVideoEncoderTexture[0]);
+//                        mNeedResetEglContext = false;
+//                    }
+//                    mVideoEncoder.frameAvailableSoon(mTextureEncodeMatrix);
+//                }
+//            }
+//        }
     }
 
     protected void savePicture(int textureId) {
