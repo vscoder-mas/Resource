@@ -16,6 +16,26 @@ import java.util.List;
  */
 
 public class STFileUtils {
+    public static final String MODEL_NAME_ACTION = "models/M_SenseME_Face_Video_7.0.0.model";
+    public static final String MODEL_NAME_FACE_ATTRIBUTE = "models/M_SenseME_Attribute_1.0.1.model";
+    public static final String MODEL_NAME_EYEBALL_CENTER = "models/M_Eyeball_Center.model";
+    public static final String MODEL_NAME_EYEBALL_CONTOUR = "models/M_SenseME_Iris_2.0.0.model";
+    public static final String MODEL_NAME_FACE_EXTRA = "models/M_SenseME_Face_Extra_Advanced_6.0.11.model";
+    public static final String MODEL_NAME_HAND = "models/M_SenseME_Hand_5.4.0.model";
+    public static final String MODEL_NAME_SEGMENT = "models/M_SenseME_Segment_4.10.8.model";
+    public static final String MODEL_NAME_BODY_FOURTEEN = "models/M_SenseME_Body_Fourteen_1.2.0.model";
+    public static final String MODEL_NAME_AVATAR_CORE = "models/M_SenseME_Avatar_Core_2.0.0.model";
+    public static final String MODEL_NAME_CATFACE_CORE = "models/M_SenseME_CatFace_3.0.0.model";
+    public static final String MODEL_NAME_AVATAR_HELP = "models/M_SenseME_Avatar_Help_2.2.0.model";
+    public static final String MODEL_NAME_TONGUE = "models/M_Align_DeepFace_Tongue_1.0.0.model";
+    public static final String MODEL_NAME_HAIR = "models/M_SenseME_Segment_Hair_1.3.4.model";
+    public static final String MODEL_NAME_LIPS_PARSING = "models/M_SenseAR_Segment_MouthOcclusion_FastV1_1.1.2.model";
+    public static final String HEAD_SEGMENT_MODEL_NAME = "models/M_SenseME_Segment_Head_1.0.3.model";
+
+    public static String getActionModelName() {
+        return MODEL_NAME_ACTION;
+    }
+
     public static List<String> copyFilterModelFiles(Context context, String index) {
         String files[] = null;
         ArrayList<String> modelFiles = new ArrayList<String>();
@@ -66,7 +86,7 @@ public class STFileUtils {
         return modelFiles;
     }
 
-    public static String getFilePath(Context context, String fileName) {
+    private static String getFilePath(Context context, String fileName) {
         String path = null;
         File dataDir = context.getApplicationContext().getExternalFilesDir(null);
         if (dataDir != null) {
@@ -76,7 +96,7 @@ public class STFileUtils {
         return path;
     }
 
-    public static boolean copyFileIfNeed(Context context, String fileName, String className) {
+    private static boolean copyFileIfNeed(Context context, String fileName, String className) {
         String path = getFilePath(context, className + File.separator + fileName);
         if (path != null) {
             File file = new File(path);

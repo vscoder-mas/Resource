@@ -1,6 +1,11 @@
 package com.rongcloud.st.beauty;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public abstract class RCRTCBeautyEngine {
+    protected float mCurrentFilterStrength = -1f;
+    protected float mFilterStrength = 0.80f;
+
     public RCRTCBeautyEngine() {
     }
 
@@ -10,9 +15,11 @@ public abstract class RCRTCBeautyEngine {
 
     public abstract boolean setBeautyEnable(boolean enable);
 
-    public abstract boolean setBeautyOption(boolean var1, RCRTCBeautyOption var2);
+    public abstract AtomicBoolean getEnableBeauty();
 
-    public abstract boolean setBeautyFilter(RCRTCBeautyFilter var1);
+    public abstract boolean setBeautyOption(RCRTCBeautyOption option);
+
+    public abstract boolean setBeautyFilter(RCRTCBeautyFilter filter);
 
     public abstract String getVersion();
 

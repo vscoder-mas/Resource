@@ -13,7 +13,7 @@ import android.hardware.SensorManager;
  * Accelerometer 用于开启重力传感器，以获得当前手机朝向
  *
  */
-public class Accelerometer {
+public class STAccelerometer {
 	/**
 	 *
 	 * @author MatrixCV
@@ -62,7 +62,7 @@ public class Accelerometer {
 	 * @param ctx
 	 * 用Activity初始化获得传感器
 	 */
-	public Accelerometer(Context ctx) {
+	public STAccelerometer(Context ctx) {
 		sensorManager = (SensorManager) ctx
 				.getSystemService(Context.SENSOR_SERVICE);
 		rotation = CLOCKWISE_ANGLE.Deg90;
