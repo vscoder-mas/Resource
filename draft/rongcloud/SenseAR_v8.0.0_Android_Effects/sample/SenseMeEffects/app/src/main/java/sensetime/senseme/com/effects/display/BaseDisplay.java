@@ -91,19 +91,24 @@ public class BaseDisplay implements GLSurfaceView.EGLContextFactory{
     }
 
     public void setBeautifyBaseParam(float[] beautifyParamsBase) {
-        for (int i = 0; i < beautifyParamsBase.length; i++) {
-            if (STUtils.isValidBeautifyParamsBase(beautifyParamsBase, i)) {
-                int type = STEffectBeautyType.EFFECT_BEAUTY_BASE_WHITTEN + i;
-                if (makeUpParamAliasMap.indexOfKey(type) >= 0) {
-                    mSTMobileEffectNative.setParam(makeUpAliasMap.get(type, 0), makeUpParamAliasMap.get(type));
-                }
-                mSTMobileEffectNative.setBeautyStrength(makeUpAliasMap.get(type, STEffectBeautyType.EFFECT_BEAUTY_BASE_WHITTEN + i), beautifyParamsBase[i]);
-            }
-        }
-        mBeautifyParamsTypeBase = beautifyParamsBase;
-        EffectInfoDataHelper.getInstance().baseParams = beautifyParamsBase;
+//        for (int i = 0; i < beautifyParamsBase.length; i++) {
+//            if (STUtils.isValidBeautifyParamsBase(beautifyParamsBase, i)) {
+//                int type = STEffectBeautyType.EFFECT_BEAUTY_BASE_WHITTEN + i;
+//                if (makeUpParamAliasMap.indexOfKey(type) >= 0) {
+//                    mSTMobileEffectNative.setParam(makeUpAliasMap.get(type, 0), makeUpParamAliasMap.get(type));
+//                }
+//                mSTMobileEffectNative.setBeautyStrength(makeUpAliasMap.get(type, STEffectBeautyType.EFFECT_BEAUTY_BASE_WHITTEN + i), beautifyParamsBase[i]);
+//            }
+//        }
+//        mBeautifyParamsTypeBase = beautifyParamsBase;
+//        EffectInfoDataHelper.getInstance().baseParams = beautifyParamsBase;
     }
 
+    /**
+     * 非常重要!!! 基础美颜调用函数
+     * @param index
+     * @param value
+     */
     public void setBeautyParam(int index, float value) {
         if ((int) (index / 100) == 1) {
             mBeautifyParamsTypeBase[index % 100 - 1] = value;
@@ -121,8 +126,8 @@ public class BaseDisplay implements GLSurfaceView.EGLContextFactory{
         if (makeUpParamAliasMap.indexOfKey(index) > 0) {
             mSTMobileEffectNative.setBeautyMode(makeUpAliasMap.get(index, index), makeUpParamAliasMap.get(index));
         }
-        mSTMobileEffectNative.setBeautyStrength(makeUpAliasMap.get(index, index), value);
 
+        mSTMobileEffectNative.setBeautyStrength(makeUpAliasMap.get(index, index), value);
         updateHumanActionDetectConfig();
     }
 
@@ -132,13 +137,13 @@ public class BaseDisplay implements GLSurfaceView.EGLContextFactory{
     }
 
     public void setWhitenFromAssetsFile(final String path) {
-        mGlSurfaceView.queueEvent(new Runnable() {
-            @Override
-            public void run() {
-                mSTMobileEffectNative.setBeautyFromAssetsFile(STEffectBeautyType.EFFECT_BEAUTY_BASE_WHITTEN,
-                        path, SenseMeApplication.getContext().getAssets());
-            }
-        });
+//        mGlSurfaceView.queueEvent(new Runnable() {
+//            @Override
+//            public void run() {
+//                mSTMobileEffectNative.setBeautyFromAssetsFile(STEffectBeautyType.EFFECT_BEAUTY_BASE_WHITTEN,
+//                        path, SenseMeApplication.getContext().getAssets());
+//            }
+//        });
     }
 
     public float[] getBeautifyParamsTypeBase() {
@@ -174,7 +179,7 @@ public class BaseDisplay implements GLSurfaceView.EGLContextFactory{
     }
 
     public void updateAnimalDetectConfig() {
-        mNeedAnimalDetect = mSTMobileEffectNative.getAnimalDetectConfig() > 0;
+//        mNeedAnimalDetect = mSTMobileEffectNative.getAnimalDetectConfig() > 0;
     }
 
     @Override

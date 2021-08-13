@@ -18,9 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import com.sensetime.sensearsourcemanager.SenseArMaterialService;
-//import com.sensetime.sensearsourcemanager.SenseArServerType;
-
+import com.rongcloud.st.beauty.RCRTCBeautyEngineImpl;
 import com.rongcloud.st.beauty.utils.STFileUtils;
 
 import java.lang.reflect.Constructor;
@@ -123,11 +121,16 @@ public class WelcomeActivity extends Activity {
     protected void onResume() {
         super.onResume();
         mIsPaused = false;
-        //todo:://加载filter_portrait人物滤镜资源
+        //todo:mascode 加载filter_portrait人物滤镜资源
         List<String> list = STFileUtils.copyFilterModelFiles(this, "filter_portrait");
         for (String str : list) {
             Log.d(TAG, "- onResume: str:" + str);
         }
+
+        //todo:mascode init beautyEngine
+//        RCRTCBeautyEngineImpl beautyEngine = new RCRTCBeautyEngineImpl();
+//        beautyEngine.init(mContext, Camera.CameraInfo.CAMERA_FACING_FRONT, 270, 720, 1280);
+//        beautyEngine.setBeautyEnable(true);
     }
 
     @Override

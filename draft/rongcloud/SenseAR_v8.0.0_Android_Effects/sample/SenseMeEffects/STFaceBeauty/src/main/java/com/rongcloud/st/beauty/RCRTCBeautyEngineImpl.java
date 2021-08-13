@@ -60,7 +60,6 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
         mSTHumanActionNative = new STMobileHumanActionNative();
         mSTMobileEffectNative = new STMobileEffectNative();
         mSTMobileColorConvertNative = new STMobileColorConvertNative();
-        accelerometer = new STAccelerometer(context);
     }
 
     @Override
@@ -73,6 +72,7 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
         currBeautyFilter = RCRTCBeautyFilter.NONE;
         this.context = context;
         initColorConvert();
+        accelerometer = new STAccelerometer(context);
         initCDLatch = new CountDownLatch(1);
         accelerometer.start();
 
@@ -159,7 +159,6 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
 
     @Override
     public int processFrame(byte[] ori) {
-        int textureId = -1;
         long mStartRenderTime = System.currentTimeMillis();
         Log.d(TAG, "- processFrame:begin !");
         if (mBeautifyTextureId == null) {
@@ -174,9 +173,9 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
 
         Log.d(TAG, "- processFrame: enableBeauty:" + enableBeauty);
         if (enableBeauty != null && enableBeauty.get()) {
-            processCDLatch = new CountDownLatch(1);
-        } else {
             processCDLatch = new CountDownLatch(2);
+        } else {
+            processCDLatch = new CountDownLatch(1);
         }
 
         //避免计数器wait block
@@ -192,7 +191,6 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
                 public void run() {
                     int orientation = getHumanActionOrientation();
                     synchronized (mHumanActionLock) {
-                        long startHumanAction = System.currentTimeMillis();
                         int ret = mSTHumanActionNative.nativeHumanActionDetectPtr(ori, STCommon.ST_PIX_FMT_NV21,
                                 mDetectConfig, orientation, mHeight, mWidth);
                         //nv21数据为横向，相对于预览方向需要旋转处理，前置摄像头还需要镜像
@@ -221,7 +219,7 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
                 cameraOrientation, cameraNeedMirror, ori, mCameraInputTexture[mCameraInputTextureIndex]);
         //双缓冲策略，提升帧率
         mCameraInputTextureIndex = 1 - mCameraInputTextureIndex;
-        textureId = mCameraInputTexture[mCameraInputTextureIndex];
+        int textureId = mCameraInputTexture[mCameraInputTextureIndex];
         if (!GLES20.glIsTexture(textureId)) {
             Log.e(TAG, "- processFrame: !GLES20.glIsTexture(textureId) failed !");
             return -1;
@@ -253,9 +251,11 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
 
                 if (stEffectRenderOutParam != null && stEffectRenderOutParam.getTexture() != null) {
                     textureId = stEffectRenderOutParam.getTexture().getId();
+                    //todo:return nv21 byte[]
+//                    stEffectRenderOutParam.getImage().getImageData();
                 }
-                Log.i(TAG, String.format("- processFrame() render cost time total:%f",
-                        System.currentTimeMillis() - mStartRenderTime));
+                Log.i(TAG, String.format("- processFrame() render cost time total:%d/ms, textureId:%d",
+                        System.currentTimeMillis() - mStartRenderTime, textureId));
 
                 try {
                     processCDLatch.countDown();
@@ -278,9 +278,10 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
 
     @Override
     public void unInit() {
-        //todo://reset 商汤engine
+        //todo:reset 商汤engine
         reset();
         initFlag = false;
+        deleteInternalTextures();
         if (accelerometer != null) {
             accelerometer.stop();
         }
@@ -380,4 +381,15 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
         return orientation;
     }
 
+    private void deleteInternalTextures() {
+        if (mBeautifyTextureId != null) {
+            GLES20.glDeleteTextures(1, mBeautifyTextureId, 0);
+            mBeautifyTextureId = null;
+        }
+
+        if (mCameraInputTexture != null) {
+            GLES20.glDeleteTextures(2, mCameraInputTexture, 0);
+            mCameraInputTexture = null;
+        }
+    }
 }

@@ -16,6 +16,7 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.rongcloud.st.beauty.RCRTCBeautyEngineImpl;
 import com.sensetime.stmobile.STCommon;
 import com.sensetime.stmobile.STEffectBeautyType;
 import com.sensetime.stmobile.STHumanActionParamsType;
@@ -188,6 +189,9 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
     protected String[] mCurrentMakeup = new String[Constants.MAKEUP_TYPE_COUNT];
     protected float[] mMakeupStrength = new float[Constants.MAKEUP_TYPE_COUNT];
 
+    //todo:mascode
+    protected RCRTCBeautyEngineImpl beautyEngine;
+
     public BaseCameraDisplay(Context context, ChangePreviewSizeListener listener, GLSurfaceView glSurfaceView) {
         super(glSurfaceView);
         mCameraProxy = new CameraProxy(context);
@@ -223,6 +227,11 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
 //        setDefaultMakeup();
 //        setDefaultFilter();
         updateHumanActionDetectConfig();
+
+//        //todo:mascode
+//        beautyEngine = new RCRTCBeautyEngineImpl();
+//        beautyEngine.init(mContext, Camera.CameraInfo.CAMERA_FACING_FRONT, 270, 720, 1280);
+//        beautyEngine.setBeautyEnable(true);
     }
 
     protected void initHandlerManager() {
@@ -275,52 +284,52 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
                         case MESSAGE_NEED_CHANGE_STICKER:
                             String sticker = (String) msg.obj;
                             mCurrentSticker = sticker;
-                            int packageId1 = mSTMobileEffectNative.changePackage(mCurrentSticker);
-                            if (packageId1 > 0) {
-                                mLastBeautyOverlapCount = -1;
-                                CollectionUtils.removeByValue(mCurrentStickerMaps, sticker);
-                                mCurrentStickerMaps.put(packageId1, sticker);
-                            }
-                            updateHumanActionDetectConfig();
-                            updateAnimalDetectConfig();
-                            Message message = mHandler.obtainMessage(CameraActivity.MSG_NEED_UPDATE_STICKER_TIPS);
-                            mHandler.sendMessage(message);
+//                            int packageId1 = mSTMobileEffectNative.changePackage(mCurrentSticker);
+//                            if (packageId1 > 0) {
+//                                mLastBeautyOverlapCount = -1;
+//                                CollectionUtils.removeByValue(mCurrentStickerMaps, sticker);
+//                                mCurrentStickerMaps.put(packageId1, sticker);
+//                            }
+//                            updateHumanActionDetectConfig();
+//                            updateAnimalDetectConfig();
+//                            Message message = mHandler.obtainMessage(CameraActivity.MSG_NEED_UPDATE_STICKER_TIPS);
+//                            mHandler.sendMessage(message);
                             break;
                         case MESSAGE_NEED_ADD_STICKER:
-                            String addSticker = (String) msg.obj;
-                            mCurrentSticker = addSticker;
-                            int stickerId = mSTMobileEffectNative.addPackage(mCurrentSticker);
-                            if (stickerId > 0) {
-                                if (mCurrentStickerMaps != null) {
-                                    CollectionUtils.removeByValue(mCurrentStickerMaps, addSticker);
-                                    mCurrentStickerMaps.put(stickerId, mCurrentSticker);
-                                }
-                            } else {
-                                Toast.makeText(SenseMeApplication.getContext(), "添加太多贴纸了", Toast.LENGTH_SHORT).show();
-                            }
-                            updateHumanActionDetectConfig();
-                            updateAnimalDetectConfig();
-                            Message messageAdd = mHandler.obtainMessage(CameraActivity.MSG_NEED_UPDATE_STICKER_TIPS);
-                            mHandler.sendMessage(messageAdd);
+//                            String addSticker = (String) msg.obj;
+//                            mCurrentSticker = addSticker;
+//                            int stickerId = mSTMobileEffectNative.addPackage(mCurrentSticker);
+//                            if (stickerId > 0) {
+//                                if (mCurrentStickerMaps != null) {
+//                                    CollectionUtils.removeByValue(mCurrentStickerMaps, addSticker);
+//                                    mCurrentStickerMaps.put(stickerId, mCurrentSticker);
+//                                }
+//                            } else {
+//                                Toast.makeText(SenseMeApplication.getContext(), "添加太多贴纸了", Toast.LENGTH_SHORT).show();
+//                            }
+//                            updateHumanActionDetectConfig();
+//                            updateAnimalDetectConfig();
+//                            Message messageAdd = mHandler.obtainMessage(CameraActivity.MSG_NEED_UPDATE_STICKER_TIPS);
+//                            mHandler.sendMessage(messageAdd);
                             break;
                         case MESSAGE_NEED_REMOVE_STICKER:
-                            int packageId = (int) msg.obj;
-                            int result = mSTMobileEffectNative.removeEffect(packageId);
-
-                            if (mCurrentStickerMaps != null && result == 0) {
-                                mCurrentStickerMaps.remove(packageId);
-                            }
-                            updateHumanActionDetectConfig();
+//                            int packageId = (int) msg.obj;
+//                            int result = mSTMobileEffectNative.removeEffect(packageId);
+//
+//                            if (mCurrentStickerMaps != null && result == 0) {
+//                                mCurrentStickerMaps.remove(packageId);
+//                            }
+//                            updateHumanActionDetectConfig();
                             break;
                         case MESSAGE_NEED_REMOVEALL_STICKERS:
-//                            mStStickerNative.removeAllStickers();
-                            if (mCurrentStickerMaps != null) {
-                                mCurrentStickerMaps.clear();
-                            }
-//                            setHumanActionDetectConfig();
-
-                            mSTMobileEffectNative.clear();
-                            updateHumanActionDetectConfig();
+////                            mStStickerNative.removeAllStickers();
+//                            if (mCurrentStickerMaps != null) {
+//                                mCurrentStickerMaps.clear();
+//                            }
+////                            setHumanActionDetectConfig();
+//
+//                            mSTMobileEffectNative.clear();
+//                            updateHumanActionDetectConfig();
                             break;
                         default:
                             break;
@@ -347,46 +356,46 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
     }
 
     protected void addSubModel(final String modelName) {
-        synchronized (mHumanActionHandleLock) {
-            int result = mSTHumanActionNative.addSubModelFromAssetFile(modelName, mContext.getAssets());
-            Log.i(TAG, String.format("add sub model result: %d", result));
-
-            if (result == 0) {
-                if (modelName.equals(FileUtils.MODEL_NAME_BODY_FOURTEEN)) {
-                    mDetectConfig |= STMobileHumanActionNative.ST_MOBILE_BODY_KEYPOINTS;
-                    mSTHumanActionNative.setParam(STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_BODY_LIMIT, 3.0f);
-                } else if (modelName.equals(FileUtils.MODEL_NAME_FACE_EXTRA)) {
-                    mDetectConfig |= STMobileHumanActionNative.ST_MOBILE_DETECT_EXTRA_FACE_POINTS;
-                } else if (modelName.equals(FileUtils.MODEL_NAME_EYEBALL_CONTOUR)) {
-                    mDetectConfig |= STMobileHumanActionNative.ST_MOBILE_DETECT_EYEBALL_CONTOUR |
-                            STMobileHumanActionNative.ST_MOBILE_DETECT_EYEBALL_CENTER;
-                } else if (modelName.equals(FileUtils.MODEL_NAME_HAND)) {
-                    mDetectConfig |= STMobileHumanActionNative.ST_MOBILE_HAND_DETECT_FULL;
-                } else if (modelName.equals(FileUtils.MODEL_NAME_AVATAR_HELP)) {
-                    mDetectConfig |= STMobileHumanActionNative.ST_MOBILE_DETECT_AVATAR_HELPINFO;
-                }
-            }
-        }
+//        synchronized (mHumanActionHandleLock) {
+//            int result = mSTHumanActionNative.addSubModelFromAssetFile(modelName, mContext.getAssets());
+//            Log.i(TAG, String.format("add sub model result: %d", result));
+//
+//            if (result == 0) {
+//                if (modelName.equals(FileUtils.MODEL_NAME_BODY_FOURTEEN)) {
+//                    mDetectConfig |= STMobileHumanActionNative.ST_MOBILE_BODY_KEYPOINTS;
+//                    mSTHumanActionNative.setParam(STHumanActionParamsType.ST_HUMAN_ACTION_PARAM_BODY_LIMIT, 3.0f);
+//                } else if (modelName.equals(FileUtils.MODEL_NAME_FACE_EXTRA)) {
+//                    mDetectConfig |= STMobileHumanActionNative.ST_MOBILE_DETECT_EXTRA_FACE_POINTS;
+//                } else if (modelName.equals(FileUtils.MODEL_NAME_EYEBALL_CONTOUR)) {
+//                    mDetectConfig |= STMobileHumanActionNative.ST_MOBILE_DETECT_EYEBALL_CONTOUR |
+//                            STMobileHumanActionNative.ST_MOBILE_DETECT_EYEBALL_CENTER;
+//                } else if (modelName.equals(FileUtils.MODEL_NAME_HAND)) {
+//                    mDetectConfig |= STMobileHumanActionNative.ST_MOBILE_HAND_DETECT_FULL;
+//                } else if (modelName.equals(FileUtils.MODEL_NAME_AVATAR_HELP)) {
+//                    mDetectConfig |= STMobileHumanActionNative.ST_MOBILE_DETECT_AVATAR_HELPINFO;
+//                }
+//            }
+//        }
     }
 
     protected void removeSubModel(final int config) {
-        synchronized (mHumanActionHandleLock) {
-            int result = mSTHumanActionNative.removeSubModelByConfig(config);
-            Log.i(TAG, String.format("remove sub model result: %d", result));
-
-            if (config == STMobileHumanActionNative.ST_MOBILE_ENABLE_BODY_KEYPOINTS) {
-                mDetectConfig &= ~STMobileHumanActionNative.ST_MOBILE_BODY_KEYPOINTS;
-            } else if (config == STMobileHumanActionNative.ST_MOBILE_ENABLE_FACE_EXTRA_DETECT) {
-                mDetectConfig &= ~STMobileHumanActionNative.ST_MOBILE_DETECT_EXTRA_FACE_POINTS;
-            } else if (config == STMobileHumanActionNative.ST_MOBILE_ENABLE_EYEBALL_CONTOUR_DETECT) {
-                mDetectConfig &= ~(STMobileHumanActionNative.ST_MOBILE_DETECT_EYEBALL_CONTOUR |
-                        STMobileHumanActionNative.ST_MOBILE_DETECT_EYEBALL_CENTER);
-            } else if (config == STMobileHumanActionNative.ST_MOBILE_ENABLE_HAND_DETECT) {
-                mDetectConfig &= ~STMobileHumanActionNative.ST_MOBILE_HAND_DETECT_FULL;
-            } else if (config == STMobileHumanActionNative.ST_MOBILE_DETECT_AVATAR_HELPINFO) {
-                mDetectConfig &= ~STMobileHumanActionNative.ST_MOBILE_DETECT_AVATAR_HELPINFO;
-            }
-        }
+//        synchronized (mHumanActionHandleLock) {
+//            int result = mSTHumanActionNative.removeSubModelByConfig(config);
+//            Log.i(TAG, String.format("remove sub model result: %d", result));
+//
+//            if (config == STMobileHumanActionNative.ST_MOBILE_ENABLE_BODY_KEYPOINTS) {
+//                mDetectConfig &= ~STMobileHumanActionNative.ST_MOBILE_BODY_KEYPOINTS;
+//            } else if (config == STMobileHumanActionNative.ST_MOBILE_ENABLE_FACE_EXTRA_DETECT) {
+//                mDetectConfig &= ~STMobileHumanActionNative.ST_MOBILE_DETECT_EXTRA_FACE_POINTS;
+//            } else if (config == STMobileHumanActionNative.ST_MOBILE_ENABLE_EYEBALL_CONTOUR_DETECT) {
+//                mDetectConfig &= ~(STMobileHumanActionNative.ST_MOBILE_DETECT_EYEBALL_CONTOUR |
+//                        STMobileHumanActionNative.ST_MOBILE_DETECT_EYEBALL_CENTER);
+//            } else if (config == STMobileHumanActionNative.ST_MOBILE_ENABLE_HAND_DETECT) {
+//                mDetectConfig &= ~STMobileHumanActionNative.ST_MOBILE_HAND_DETECT_FULL;
+//            } else if (config == STMobileHumanActionNative.ST_MOBILE_DETECT_AVATAR_HELPINFO) {
+//                mDetectConfig &= ~STMobileHumanActionNative.ST_MOBILE_DETECT_AVATAR_HELPINFO;
+//            }
+//        }
     }
 
     public void enableBeautify(boolean needBeautify) {
@@ -495,10 +504,10 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
     }
 
     protected void setDefaultFilter() {
-        if (EffectInfoDataHelper.getInstance().getFullBeautyName().equals("")) {
-            mSTMobileEffectNative.setBeauty(STEffectBeautyType.EFFECT_BEAUTY_FILTER, EffectInfoDataHelper.getInstance().getFilterStyle());
-            setFilterStrength(EffectInfoDataHelper.getInstance().getFilterStrength());
-        }
+//        if (EffectInfoDataHelper.getInstance().getFullBeautyName().equals("")) {
+//            mSTMobileEffectNative.setBeauty(STEffectBeautyType.EFFECT_BEAUTY_FILTER, EffectInfoDataHelper.getInstance().getFilterStyle());
+//            setFilterStrength(EffectInfoDataHelper.getInstance().getFilterStrength());
+//        }
     }
 
     protected void initFaceAttribute() {
@@ -1084,6 +1093,12 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
         mChangeStickerManagerHandler.sendMessage(msg);
     }
 
+    /**
+     * 非常重要!!! 设置滤镜函数
+     * @param filterType
+     * @param filterName
+     * @param modelPath
+     */
     public void setFilterStyle(String filterType, String filterName, String modelPath) {
         //mFilterStyle = modelPath;
         EffectInfoDataHelper.getInstance().filterType = filterType;
@@ -1461,45 +1476,45 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
     }
 
     public void setStrengthForType(int type, float strength) {
-        mMakeupStrength[type] = strength;
-        EffectInfoDataHelper.getInstance().currentMakeupStrength = mMakeupStrength;
-        if (convertMakeupTypeToNewType(type) == STEffectBeautyType.EFFECT_BEAUTY_HAIR_DYE) {
-            strength = strength * MAKEUP_HAIRDYE_STRENGTH_RATIO;
-        }
-        int ret = mSTMobileEffectNative.setBeautyStrength(convertMakeupTypeToNewType(type), strength);
+//        mMakeupStrength[type] = strength;
+//        EffectInfoDataHelper.getInstance().currentMakeupStrength = mMakeupStrength;
+//        if (convertMakeupTypeToNewType(type) == STEffectBeautyType.EFFECT_BEAUTY_HAIR_DYE) {
+//            strength = strength * MAKEUP_HAIRDYE_STRENGTH_RATIO;
+//        }
+//        int ret = mSTMobileEffectNative.setBeautyStrength(convertMakeupTypeToNewType(type), strength);
     }
 
     public String mMakeupPath;
 
     public void setMakeupForTypeFromAssets(int type, String typePath) {
         mMakeupPath = typePath;
-        int ret = mSTMobileEffectNative.setBeautyFromAssetsFile(402, typePath, mContext.getAssets());
+//        int ret = mSTMobileEffectNative.setBeautyFromAssetsFile(402, typePath, mContext.getAssets());
         updateHumanActionDetectConfig();
     }
 
     public void removeMakeupByType(int type) {
-        int ret = mSTMobileEffectNative.setBeauty(convertMakeupTypeToNewType(type), null);
-        EffectInfoDataHelper.getInstance().setEmptyMakeup(type);
-        try {
-            if (ret == 0) {
-                mCurrentMakeup[type] = null;
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace();
-        }
-
-        updateHumanActionDetectConfig();
+//        int ret = mSTMobileEffectNative.setBeauty(convertMakeupTypeToNewType(type), null);
+//        EffectInfoDataHelper.getInstance().setEmptyMakeup(type);
+//        try {
+//            if (ret == 0) {
+//                mCurrentMakeup[type] = null;
+//            }
+//        } catch (ArrayIndexOutOfBoundsException e) {
+//            e.printStackTrace();
+//        }
+//
+//        updateHumanActionDetectConfig();
     }
 
     public void setMakeupForType(int type, String typePath) {
-        try {
-            mCurrentMakeup[type] = typePath;
-            EffectInfoDataHelper.getInstance().setCurrentMakeup(mCurrentMakeup);
-            mSTMobileEffectNative.setBeauty(convertMakeupTypeToNewType(type), typePath);
-            updateHumanActionDetectConfig();
-        } catch (ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            mCurrentMakeup[type] = typePath;
+//            EffectInfoDataHelper.getInstance().setCurrentMakeup(mCurrentMakeup);
+//            mSTMobileEffectNative.setBeauty(convertMakeupTypeToNewType(type), typePath);
+//            updateHumanActionDetectConfig();
+//        } catch (ArrayIndexOutOfBoundsException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void setBeautyParamsFromPackage(STEffectBeautyInfo[] beautyInfos) {
