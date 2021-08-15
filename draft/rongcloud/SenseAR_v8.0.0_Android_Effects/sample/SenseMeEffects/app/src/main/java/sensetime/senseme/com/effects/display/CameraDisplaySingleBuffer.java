@@ -129,8 +129,8 @@ public class CameraDisplaySingleBuffer extends BaseCameraDisplay {
 //        }
 //
 //        mStartTime = System.currentTimeMillis();
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+//        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+//        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 //
 //        //避免计数器wait block
 //        boolean isCreateHumanActionHandleSucceeded = mIsCreateHumanActionHandleSucceeded;
@@ -249,6 +249,8 @@ public class CameraDisplaySingleBuffer extends BaseCameraDisplay {
 //            Log.e(TAG, "onDrawFrame: " + e.getMessage());
 //        }
 
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         int textureId = beautyEngine.processFrame(mNv21ImageData);
         mFrameCost = (int) (System.currentTimeMillis() - mStartTime);
         long timer = System.currentTimeMillis();
@@ -293,7 +295,6 @@ public class CameraDisplaySingleBuffer extends BaseCameraDisplay {
         super.onSurfaceCreated(gl, config);
         //非常重要!!! 屏幕会黑
         initColorConvert();
-//        RCRTCBeautyEngineImpl.getInstance().initColorConvert();
     }
 
     @Override

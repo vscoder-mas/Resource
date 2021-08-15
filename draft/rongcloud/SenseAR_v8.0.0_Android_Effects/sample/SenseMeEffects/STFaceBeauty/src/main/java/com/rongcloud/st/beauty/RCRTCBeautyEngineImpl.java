@@ -373,9 +373,9 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
             mSTMobileEffectNative.setBeautyStrength(STEffectBeautyType.EFFECT_BEAUTY_BASE_FACE_SMOOTH,
                     convertBeautyParam(option.getSmoothLevel()));
             if (option.getSmoothLevel() > 0) {
-                mSTMobileEffectNative.setBeautyMode(STEffectBeautyType.EFFECT_BEAUTY_BASE_FACE_SMOOTH, 1);
+                mSTMobileEffectNative.setBeautyMode(STEffectBeautyType.EFFECT_BEAUTY_BASE_FACE_SMOOTH, 2);
             }
-            
+
             updateHumanActionDetectConfig();
             return true;
         } catch (Exception ex) {
