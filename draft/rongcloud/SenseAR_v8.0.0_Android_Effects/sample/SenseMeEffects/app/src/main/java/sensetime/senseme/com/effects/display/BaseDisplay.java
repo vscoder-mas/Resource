@@ -1,6 +1,7 @@
 package sensetime.senseme.com.effects.display;
 
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.sensetime.stmobile.STEffectBeautyType;
@@ -28,8 +29,10 @@ public class BaseDisplay implements GLSurfaceView.EGLContextFactory{
     protected GLSurfaceView mGlSurfaceView;
     protected EGLContext mEglContext;
     protected EGLContextHelper mEGLContextHelper = new EGLContextHelper();
-    protected STMobileEffectNative mSTMobileEffectNative = new STMobileEffectNative();
-    protected STMobileHumanActionNative mSTHumanActionNative = new STMobileHumanActionNative();
+//    protected STMobileEffectNative mSTMobileEffectNative = new STMobileEffectNative();
+//    protected STMobileHumanActionNative mSTHumanActionNative = new STMobileHumanActionNative();
+    protected STMobileEffectNative mSTMobileEffectNative;
+    protected STMobileHumanActionNative mSTHumanActionNative;
     protected long mDetectConfig = 0;
     protected boolean mNeedAnimalDetect = false;
 
@@ -127,6 +130,7 @@ public class BaseDisplay implements GLSurfaceView.EGLContextFactory{
             mSTMobileEffectNative.setBeautyMode(makeUpAliasMap.get(index, index), makeUpParamAliasMap.get(index));
         }
 
+        Log.d(TAG, String.format("- setBeautyParam: index:%d, value:%f", index, value));
         mSTMobileEffectNative.setBeautyStrength(makeUpAliasMap.get(index, index), value);
         updateHumanActionDetectConfig();
     }

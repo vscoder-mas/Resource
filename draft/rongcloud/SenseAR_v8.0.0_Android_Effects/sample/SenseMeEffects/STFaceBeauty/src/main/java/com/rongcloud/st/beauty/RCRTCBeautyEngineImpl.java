@@ -40,7 +40,7 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
     private volatile boolean initFlag = false;
     private final Object mHumanActionHandleLock = new Object();
     private final Object mHumanActionLock = new Object();
-    private RCRTCBeautyOption currBeautyOption = new RCRTCBeautyOption(0, 0, 0);
+    private RCRTCBeautyOption currBeautyOption;
     private RCRTCBeautyFilter currBeautyFilter;
     private AtomicBoolean enableBeauty;
 
@@ -97,12 +97,11 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
         mOrientation = orientation;
         mWidth = width;
         mHeight = height;
-        currBeautyOption = new RCRTCBeautyOption(0, 0, 0);
+        currBeautyOption = new RCRTCBeautyOption.Builder().smooth(0).white(0).red(0).build();
         currBeautyFilter = RCRTCBeautyFilter.NONE;
         this.context = context;
-        accelerometer = new STAccelerometer(context);
         initCDLatch = new CountDownLatch(1);
-        accelerometer.start();
+        accelerometer = new STAccelerometer(context);
 
         try {
             initHumanAction();
@@ -124,6 +123,7 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
                 try {
                     synchronized (mHumanActionHandleLock) {
                         long startLoadHumanActionModel = System.currentTimeMillis();
+                        accelerometer.start();
                         //从asset资源文件夹读取model到内存，再使用底层st_mobile_human_action_create_from_buffer接口创建handle
                         int result = mSTHumanActionNative.createInstanceFromAssetFile(STFileUtils.getActionModelName(), mHumanActionCreateConfig, context.getAssets());
                         Log.i(TAG, String.format("the result for createInstance for human_action is %d", result));
@@ -198,7 +198,7 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
         updateHumanActionDetectConfig();
     }
 
-    private void updateHumanActionDetectConfig() {
+    public void updateHumanActionDetectConfig() {
         mDetectConfig = mSTMobileEffectNative.getHumanActionDetectConfig();
     }
 
@@ -348,9 +348,41 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
         return enableBeauty;
     }
 
+    private float convertBeautyParam(int val) {
+        float ret = 0f;
+        if (val >= 0 && val <= 9) {
+            ret = (float) val;
+        }
+
+        return ret;
+    }
+
     @Override
     public boolean setBeautyOption(RCRTCBeautyOption option) {
-        return false;
+        try {
+            Log.d(TAG, String.format("- setBeautyOption: white:%d, ruddy:%d, smooth:%d",
+                    option.getWhitenessLevel(), option.getRuddyLevel(), option.getSmoothLevel()));
+            mSTMobileEffectNative.setBeautyStrength(STEffectBeautyType.EFFECT_BEAUTY_BASE_WHITTEN,
+                    convertBeautyParam(option.getWhitenessLevel()));
+            if (option.getWhitenessLevel() > 0) {
+                mSTMobileEffectNative.setBeautyMode(STEffectBeautyType.EFFECT_BEAUTY_BASE_WHITTEN, 0);
+            }
+
+            mSTMobileEffectNative.setBeautyStrength(STEffectBeautyType.EFFECT_BEAUTY_BASE_REDDEN,
+                    convertBeautyParam(option.getRuddyLevel()));
+            mSTMobileEffectNative.setBeautyStrength(STEffectBeautyType.EFFECT_BEAUTY_BASE_FACE_SMOOTH,
+                    convertBeautyParam(option.getSmoothLevel()));
+            if (option.getSmoothLevel() > 0) {
+                mSTMobileEffectNative.setBeautyMode(STEffectBeautyType.EFFECT_BEAUTY_BASE_FACE_SMOOTH, 1);
+            }
+            
+            updateHumanActionDetectConfig();
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Log.e(TAG, "- setBeautyOption failed ! ex:" + ex);
+            return  false;
+        }
     }
 
     @Override
@@ -384,7 +416,7 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
 
     @Override
     public RCRTCBeautyOption getCurrentBeautyOption() {
-        return null;
+        return currBeautyOption;
     }
 
     @Override

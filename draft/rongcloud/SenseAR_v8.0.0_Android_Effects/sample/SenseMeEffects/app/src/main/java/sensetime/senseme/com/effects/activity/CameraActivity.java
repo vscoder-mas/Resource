@@ -63,6 +63,8 @@ import android.widget.Toast;
 //import com.sensetime.sensearsourcemanager.SenseArMaterial;
 //import com.sensetime.sensearsourcemanager.SenseArMaterialService;
 //import com.sensetime.sensearsourcemanager.SenseArMaterialType;
+import com.rongcloud.st.beauty.RCRTCBeautyEngineImpl;
+import com.rongcloud.st.beauty.RCRTCBeautyOption;
 import com.sensetime.stmobile.STEffectBeautyType;
 import com.sensetime.stmobile.STMobileHumanActionNative;
 import com.sensetime.stmobile.STSoundPlay;
@@ -1941,23 +1943,24 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
         }
 
         mShowOriginBtn1 = (TextView) findViewById(R.id.tv_show_origin1);
-        mShowOriginBtn1.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // TODO Auto-generated method stub
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mCameraDisplay.setShowOriginal(true);
-                    mCaptureButton.setEnabled(false);
-                    findViewById(R.id.tv_change_camera).setEnabled(false);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    mCameraDisplay.setShowOriginal(false);
-                    mCaptureButton.setEnabled(true);
-                    findViewById(R.id.tv_change_camera).setEnabled(true);
-                }
-                return true;
-            }
-        });
+        mShowOriginBtn1.setOnClickListener(this);
+//        mShowOriginBtn1.setOnTouchListener(new View.OnTouchListener() {
+//
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                // TODO Auto-generated method stub
+//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    mCameraDisplay.setShowOriginal(true);
+//                    mCaptureButton.setEnabled(false);
+//                    findViewById(R.id.tv_change_camera).setEnabled(false);
+//                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    mCameraDisplay.setShowOriginal(false);
+//                    mCaptureButton.setEnabled(true);
+//                    findViewById(R.id.tv_change_camera).setEnabled(true);
+//                }
+//                return true;
+//            }
+//        });
         mShowOriginBtn1.setVisibility(View.VISIBLE);
 
         mShowOriginBtn2 = (TextView) findViewById(R.id.tv_show_origin2);
@@ -2928,8 +2931,23 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
                 mCameraDisplay.switchCamera();
             }
         } else if (id == R.id.tv_cancel) {// back to welcome page
+        } else if (id == R.id.tv_show_origin1) {
+            if (origin) {
+                RCRTCBeautyOption option = RCRTCBeautyEngineImpl.getInstance().getCurrentBeautyOption();
+                option.setWhitenessLevel(0);
+                option.setRuddyLevel(0);
+                option.setSmoothLevel(8);
+                RCRTCBeautyEngineImpl.getInstance().setBeautyOption(option);
+                RCRTCBeautyEngineImpl.getInstance().setBeautyEnable(true);
+            } else {
+                RCRTCBeautyEngineImpl.getInstance().setBeautyEnable(false);
+            }
+
+            origin = !origin;
         }
     }
+    private boolean origin = true;
+
 
     // 分隔间距 继承RecyclerView.ItemDecoration
     class SpaceItemDecoration extends RecyclerView.ItemDecoration {
@@ -3874,7 +3892,6 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
     /**
      * 根据group id 对应素材列表
      *
-     * @param groups group id 列表
      */
 //    private void fetchGroupMaterialList(final List<StickerOptionsItem> groups) {
 //        String[] array = {"sticker_new_engine", "object_track", "sticker_add_package"};

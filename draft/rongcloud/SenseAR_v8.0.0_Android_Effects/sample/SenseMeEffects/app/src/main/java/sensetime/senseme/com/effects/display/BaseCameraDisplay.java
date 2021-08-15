@@ -213,25 +213,28 @@ public class BaseCameraDisplay extends BaseDisplay implements Renderer {
         DEBUG = CameraActivity.DEBUG;
 
         //初始化非OpengGL相关的句柄，包括人脸检测及人脸属性
-        initHumanAction();
+//        initHumanAction();
 //        initCatFace();
 //        initObjectTrack();
 
         //因为人脸模型加载较慢，建议异步调用
-        if (DEBUG) {
+//        if (DEBUG) {
 //            initFaceAttribute();
-        }
+//        }
 
 //        initHandlerManager();
-        setDefaultParams();
+//        setDefaultParams();
 //        setDefaultMakeup();
 //        setDefaultFilter();
-        updateHumanActionDetectConfig();
+//        updateHumanActionDetectConfig();
 
-//        //todo:mascode
-//        beautyEngine = new RCRTCBeautyEngineImpl();
-//        beautyEngine.init(mContext, Camera.CameraInfo.CAMERA_FACING_FRONT, 270, 720, 1280);
-//        beautyEngine.setBeautyEnable(true);
+        //todo:mascode
+        beautyEngine = RCRTCBeautyEngineImpl.getInstance();
+        beautyEngine.init(mContext, Camera.CameraInfo.CAMERA_FACING_FRONT, 270, 720, 1280);
+        beautyEngine.setBeautyEnable(true);
+        mSTHumanActionNative = beautyEngine.getSTHumanActionNative();
+        mSTMobileEffectNative = beautyEngine.getSTMobileEffectNative();
+        updateHumanActionDetectConfig();
     }
 
     protected void initHandlerManager() {
