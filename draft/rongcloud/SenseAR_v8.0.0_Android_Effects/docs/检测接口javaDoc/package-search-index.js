@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"com.sensetime.stmobile","h":"","u":""},{"l":"所有程序包","h":"","u":"allpackages-index.html"}]
