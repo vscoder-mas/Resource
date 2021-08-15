@@ -131,5 +131,51 @@ public class STFileUtils {
 
         return true;
     }
+
+    public static List<String> getFilterNames(Context context, String index) {
+        ArrayList<String> modelNames = new ArrayList<String>();
+        String folderpath = null;
+        File dataDir = context.getExternalFilesDir(null);
+        if (dataDir != null) {
+            folderpath = dataDir.getAbsolutePath() + File.separator + index;
+            File folder = new File(folderpath);
+
+            if (!folder.exists()) {
+                folder.mkdir();
+            }
+        }
+
+        File file = new File(folderpath);
+        File[] subFile = file.listFiles();
+
+        if (subFile == null || subFile.length == 0) {
+            return modelNames;
+        }
+
+        for (int i = 0; i < subFile.length; i++) {
+            // 判断是否为文件夹
+            if (!subFile[i].isDirectory()) {
+                String filename = subFile[i].getAbsolutePath();
+                // 判断是否为model结尾
+                if (filename.trim().toLowerCase().endsWith(".model") && filename.indexOf("filter") != -1) {
+                    String name = subFile[i].getName().substring(13);
+                    modelNames.add(getFileNameNoEx(name));
+                }
+            }
+        }
+
+        return modelNames;
+    }
+
+    public static String getFileNameNoEx(String filename) {
+        if ((filename != null) && (filename.length() > 0)) {
+            int dot = filename.lastIndexOf('.');
+            if ((dot > -1) && (dot < (filename.length()))) {
+                return filename.substring(0, dot);
+            }
+        }
+
+        return filename;
+    }
 }
 

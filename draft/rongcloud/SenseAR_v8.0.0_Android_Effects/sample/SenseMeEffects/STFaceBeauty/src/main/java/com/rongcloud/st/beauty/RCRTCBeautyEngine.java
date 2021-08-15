@@ -10,7 +10,7 @@ public abstract class RCRTCBeautyEngine {
     }
 
     public static RCRTCBeautyEngine getInstance() {
-        return RCRTCBeautyEngineImpl.InstanceHolder.engine;
+        return RCRTCBeautyEngineImpl.getInstance();
     }
 
     public abstract boolean setBeautyEnable(boolean enable);

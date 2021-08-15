@@ -5,6 +5,7 @@ import android.hardware.Camera;
 import android.opengl.GLES20;
 import android.util.Log;
 
+import com.rongcloud.st.beauty.entity.STFilterItem;
 import com.rongcloud.st.beauty.utils.STAccelerometer;
 import com.rongcloud.st.beauty.utils.STFileUtils;
 import com.rongcloud.st.beauty.utils.STGlUtil;
@@ -20,6 +21,9 @@ import com.sensetime.stmobile.model.STEffectRenderOutParam;
 import com.sensetime.stmobile.model.STEffectTexture;
 import com.sensetime.stmobile.model.STHumanAction;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,6 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPlugin {
     private static final String TAG = RCRTCBeautyEngineImpl.class.getSimpleName();
+    private volatile static RCRTCBeautyEngineImpl self;
     private Context context;
     private int mCameraID = Camera.CameraInfo.CAMERA_FACING_FRONT;
     private int mWidth = 0;
@@ -53,13 +58,37 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
     private int[] mBeautifyTextureId;
     private int[] mCameraInputTexture;
     private int mCameraInputTextureIndex = 0;
+    private Map<RCRTCBeautyFilter, STFilterItem> mapFilter = new HashMap<>();
 
-    public RCRTCBeautyEngineImpl() {
-        currBeautyFilter = RCRTCBeautyFilter.NONE;
+    private RCRTCBeautyEngineImpl() {
         enableBeauty = new AtomicBoolean(false);
         mSTHumanActionNative = new STMobileHumanActionNative();
         mSTMobileEffectNative = new STMobileEffectNative();
         mSTMobileColorConvertNative = new STMobileColorConvertNative();
+    }
+
+    public STMobileHumanActionNative getSTHumanActionNative() {
+        return mSTHumanActionNative;
+    }
+
+    public STMobileEffectNative getSTMobileEffectNative() {
+        return mSTMobileEffectNative;
+    }
+
+    public STMobileColorConvertNative getSTMobileColorConvertNative() {
+        return mSTMobileColorConvertNative;
+    }
+
+    public static RCRTCBeautyEngineImpl getInstance() {
+        if (self == null) {
+            synchronized (RCRTCBeautyEngineImpl.class) {
+                if (self == null) {
+                    self = new RCRTCBeautyEngineImpl();
+                }
+            }
+        }
+
+        return self;
     }
 
     @Override
@@ -71,7 +100,6 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
         currBeautyOption = new RCRTCBeautyOption(0, 0, 0);
         currBeautyFilter = RCRTCBeautyFilter.NONE;
         this.context = context;
-        initColorConvert();
         accelerometer = new STAccelerometer(context);
         initCDLatch = new CountDownLatch(1);
         accelerometer.start();
@@ -130,6 +158,7 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
                             Log.i(TAG, String.format("add head segment model result: %d", result));
                         }
 
+                        initFilterItems();
                         Log.d(TAG, "- initHumanAction run: finished !");
                     }
                 } catch (Exception ex) {
@@ -140,6 +169,27 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
                 }
             }
         }).start();
+    }
+
+    private void initFilterItems() {
+        //加载滤镜资源文件
+        List<String> lstPath = STFileUtils.copyFilterModelFiles(context, "filter_portrait");
+        List<String> lstNames = STFileUtils.getFilterNames(context, "filter_portrait");
+        if (lstPath != null && lstNames != null && lstPath.size() == lstNames.size()) {
+            for (int i = 0; i < lstPath.size(); i++) {
+                switch (lstNames.get(i)) {
+                    case "ol":
+                        mapFilter.put(RCRTCBeautyFilter.OL, new STFilterItem(lstNames.get(i), lstPath.get(i)));
+                        break;
+                    case "babypink":
+                        mapFilter.put(RCRTCBeautyFilter.BABYPINK, new STFilterItem(lstNames.get(i), lstPath.get(i)));
+                        break;
+                    case "hotwind":
+                        mapFilter.put(RCRTCBeautyFilter.HOTWIND, new STFilterItem(lstNames.get(i), lstPath.get(i)));
+                        break;
+                }
+            }
+        }
     }
 
     private void setDefaultParams() {
@@ -256,16 +306,16 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
                 }
                 Log.i(TAG, String.format("- processFrame() render cost time total:%d/ms, textureId:%d",
                         System.currentTimeMillis() - mStartRenderTime, textureId));
-
-                try {
-                    processCDLatch.countDown();
-                    if (enableBeauty != null && enableBeauty.get() && isCreateHumanActionHandleSucceeded) {
-                        processCDLatch.await();
-                    }
-                } catch (Exception ex) {
-                    Log.e(TAG, "- processFrame failed ! ex:" + ex);
-                }
             }
+        }
+
+        try {
+            processCDLatch.countDown();
+            if (enableBeauty != null && enableBeauty.get() && isCreateHumanActionHandleSucceeded) {
+                processCDLatch.await();
+            }
+        } catch (Exception ex) {
+            Log.e(TAG, "- processFrame failed ! ex:" + ex);
         }
 
         return textureId;
@@ -305,7 +355,26 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
 
     @Override
     public boolean setBeautyFilter(RCRTCBeautyFilter filter) {
-        return false;
+        try {
+            currBeautyFilter = filter;
+            STFilterItem item = mapFilter.get(filter);
+            if (item != null) {
+                mSTMobileEffectNative.setBeauty(STEffectBeautyType.EFFECT_BEAUTY_FILTER, item.model);
+                if (enableBeauty != null) {
+                    enableBeauty.set(true);
+                }
+            } else {
+                if (enableBeauty != null) {
+                    enableBeauty.set(false);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Log.e(TAG, "- setBeautyFilter: failed! ex:" + ex);
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -320,7 +389,7 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
 
     @Override
     public RCRTCBeautyFilter getCurrentFilter() {
-        return null;
+        return currBeautyFilter;
     }
 
     @Override
@@ -334,14 +403,7 @@ public class RCRTCBeautyEngineImpl extends RCRTCBeautyEngine implements BeautyPl
         }
     }
 
-    static class InstanceHolder {
-        static RCRTCBeautyEngine engine = new RCRTCBeautyEngineImpl();
-
-        InstanceHolder() {
-        }
-    }
-
-    private void initColorConvert() {
+    public void initColorConvert() {
         int ret = mSTMobileColorConvertNative.createInstance();
         if (ret == 0) {
             mSTMobileColorConvertNative.setTextureSize(mWidth, mHeight);
